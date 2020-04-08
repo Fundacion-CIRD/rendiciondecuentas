@@ -7,3 +7,9 @@ verify_ssl = true
 
 [packages]
 django = "~=2.2.11"
+django-baton = "*"
+django-postgres-unaccent = {git = "https://github.com/angoybu/django-postgres-unaccent.git",ref = "master"}
+django-active-link = "*"
+djangorestframework = "*"
+pillow = "*"
+gunicorn = "*"

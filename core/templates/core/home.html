@@ -1,0 +1,129 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+  {% include 'core/partials/navbar.html' with display='none' fixed=True %}
+  <div id="banner" class="banner">
+    <div class="container d-flex flex-column pt-4 pt-lg-0 align-items-center justify-content-lg-top justify-content-lg-center">
+      <div class="row">
+        <div class="col-lg-8">
+          <span class="hashtag">#QuedateEnCasa</span>
+          <h1><span>Rendición de <br><strong>DONACIONES COVID-19</strong></span></h1>
+          <span class="subtitle">
+            Sistema de Rendición de Cuentas de Donaciones<br>
+            Recibidas para la lucha contra el COVID-19.
+          </span>
+          <div class="datos-abiertos d-none d-lg-block">
+            <img class="img-fluid" src="{% static 'img/datos_abiertos_logo.png' %}" alt="Datos Abiertos">
+          </div>
+        </div>
+        <div class="col-lg-4 nav flex-column align-items-lg-end align-items-center justify-content-center mt-4 mt-lg-0">
+          <a class="text-center" href="#resumen">Resumen</a>
+          <a class="text-center" href="{% url 'core:donaciones' %}">Donaciones Recibidas</a>
+          <a class="text-center" href="#">Adquisiciones Realizadas</a>
+        </div>
+      </div>
+      <div class="datos-abiertos d-lg-none">
+        <img class="img-fluid" src="{% static 'img/datos_abiertos_logo.png' %}" alt="Datos Abiertos">
+      </div>
+    </div>
+  </div> <!-- banner -->
+  <div class="container">
+    <div class="intro">
+      <h2>Rendición de Donaciones COVID-19</h2>
+      <div class="d-block d-md-none">
+        <p>
+          En el sistema de rendición de cuentas de donaciones recibidas para la lucha contra el COVID-19 podés acceder y
+          descargar en formato abierto datos de las donaciones recibidas tales como fecha N° de depósito, nombres del
+          aportante, monto depositado, N° de recibo de donación y el tipo de cambio (ITAÚ).
+        </p>
+        <p>
+          También podés acceder a los datos de las adquisiciones realizadas como por ejemplo fecha, proveedor, tipo de
+          comprobante, N° de comprobante, N° de orden de pago, concepto, cantidad, precio por unidad, precio total,
+          institución beneficiada y documento firmado de las diferentes recepciones.
+        </p>
+        <p>
+          <strong>La Fundación CIRD</strong>, es una organización privada, sin fines de lucro, con 30 años de
+          experiencia en gerencia proyectos de desarrollo en el Paraguay. Como resultado de esta experiencia ha diseñado
+          un modelo para contextos complejos y difíciles basado en uno de los componentes esenciales de la Misión de la
+          Fundación que es la formación de Capital Humano y Social.
+        </p>
+      </div>
+      <div class="row d-none d-md-flex">
+        <div class="col-md-6">
+          <p>
+            En el sistema de rendición de cuentas de donaciones recibidas para la lucha contra el COVID-19 podés acceder
+            y descargar en formato abierto datos de las donaciones recibidas tales como fecha N° de depósito, nombres
+            del aportante, monto depositado, N° de recibo de donación y el tipo de cambio (ITAÚ).
+          </p>
+          <p>
+            También podés acceder a los datos de las adquisiciones realizadas como por ejemplo fecha, proveedor, tipo de
+            comprobante, N° de comprobante, N° de orden de pago, concepto,
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p>
+            cantidad, precio por unidad, precio total, institución beneficiada y documento firmado de las diferentes
+            recepciones.
+          </p>
+          <p>
+            <strong>La Fundación CIRD</strong>, es una organización privada, sin fines de lucro, con 30 años de
+            experiencia en gerencia proyectos de desarrollo en el Paraguay. Como resultado de esta experiencia ha
+            diseñado un modelo para contextos complejos y difíciles basado en uno de los componentes esenciales de la
+            Misión de la Fundación que es la formación de Capital Humano y Social.
+          </p>
+        </div>
+      </div>
+      <div id="resumen"></div>
+    </div> <!-- intro -->
+    <hr>
+    <h2>Resumen General</h2>
+    <div class="row resumen-nros">
+      <div class="col-md-6">
+        <div class="monto">Gs. {{ total_donaciones|floatformat:0|intcomma }}</div>
+        <div class="desc">Total Donaciones Recibidas</div>
+      </div>
+      <div class="col-md-6 mt-4 mt-md-0">
+        <div class="monto">Gs. 43.800.298</div>
+        <div class="desc">Total Adquisiciones Ejecutadas</div>
+      </div>
+    </div> <!-- resumen-nros -->
+    <div class="graficos">
+      <div class="w-100 d-flex justify-content-center ver-mas">
+        <a href="#" class="btn btn-primary">Ver más insumos adquiridos</a>
+      </div>
+    </div> <!-- graficos -->
+  </div><!-- container -->
+  <div class="container d-block d-sm-none">
+    <h2>Galería</h2>
+    <div class="w-100">
+      <img src="https://picsum.photos/500" alt="Image" class="img-fluid">
+    </div>
+    <div class="w-100 d-flex justify-content-center ver-mas">
+      <a href="#" class="btn btn-primary">Ver más fotos</a>
+    </div>
+  </div>
+  <div class="galeria d-none d-sm-block">
+    <div class="d-flex justify-content-between">
+      <div class="foto position-relative" style="background-image: url('https://picsum.photos/500')">
+        <div class="position-absolute d-flex justify-content-center align-items-center p-5">
+          <p>El Gobierno entregó el primer lote de equipo e insumos de protección biológica al @msaludpy.</p>
+        </div>
+      </div>
+      <div class="foto position-relative" style="background-image: url('https://picsum.photos/500')">
+        <div class="position-absolute d-flex justify-content-center align-items-center p-5">
+          <p>El Gobierno entregó el primer lote de equipo e insumos de protección biológica al @msaludpy.</p>
+        </div>
+      </div>
+      <div class="foto position-relative" style="background-image: url('https://picsum.photos/500')">
+        <div class="position-absolute d-flex justify-content-center align-items-center p-5">
+          <p>El Gobierno entregó el primer lote de equipo e insumos de protección biológica al @msaludpy.</p>
+        </div>
+      </div>
+    </div>
+    <div class="w-100 d-flex justify-content-center ver-mas">
+      <a href="#" class="btn btn-primary">Ver más fotos</a>
+    </div>
+  </div>
+{% endblock %}

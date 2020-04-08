@@ -11,21 +11,27 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+try:
+    with open(os.path.join(BASE_DIR, 'secrets.json')) as handle:
+        SECRETS = json.load(handle)
+except IOError:
+    SECRETS = {}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7r(pak=_)b((qx6gt*y#b*c@saprus_^i)^rfge7&%q=vgc401'
+SECRET_KEY = SECRETS['secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = SECRETS['debug']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = SECRETS['allowed_hosts']
 
 
 # Application definition
@@ -37,7 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'django.contrib.humanize',
+    'active_link',
+    'rest_framework',
+    'utils',
     'core',
 ]
 
@@ -78,8 +87,12 @@ WSGI_APPLICATION = 'donaciones_cird.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django_postgres_unaccent',
+        'NAME': SECRETS['db_name'],
+        'USER': SECRETS['db_user'],
+        'PASSWORD': SECRETS['db_password'],
+        'HOST': SECRETS['db_host'],
+        'PORT': SECRETS['db_port'],
     }
 }
 
@@ -120,13 +133,33 @@ USE_L10N = True
 
 USE_TZ = True
 
+USE_THOUSAND_SEPARATOR = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static_compiled'),
+    os.path.join(BASE_DIR, 'staticfiles'),
+]
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 MEDIA_URL = '/uploads/'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '5/sec',
+    }
+}

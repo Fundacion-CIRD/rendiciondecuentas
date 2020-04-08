@@ -1,0 +1,179 @@
+{% extends 'core/base.html' %}
+{% load static %} {% load humanize %} {% load query_utils %}
+
+{% block styles %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
+{% endblock %}
+
+
+{% block title %}
+  Donaciones | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  {% include 'core/partials/navbar.html' %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>Donaciones Recibidas</h2>
+      </div>
+      <div class="col-md-4 mt-2 mt-md-0 d-flex align-items-md-end" style="margin-bottom: 24px">
+        <button type="button" data-toggle="collapse" data-target="#filtros" class="btn btn-secondary" id="filtrosBtn">
+          <span class="w-100 d-flex align-items-center justify-content-between">
+            <span>Filtros</span>
+            <i class="icon-chevron-down" id="filtrosArrow"></i>
+          </span>
+        </button>
+      </div>
+    </div> <!-- row -->
+    <div class="collapse" id="filtros">
+      <div class="card card-body">
+        <form>
+          <div class="row">
+            <div class="col-lg-3 col-sm-6 col-12">
+              <div class="form-group">
+                <label class="form-label" for="donante">Donante</label>
+                <input type="text" class="form-control form-control-sm" id="donante" name="donante"
+                       {% if request.GET.donante %}value="{{ request.GET.donante }}"{% endif %}>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12">
+              <div class="form-group" id="fecha">
+                <fieldset>
+                  <legend class="form-label">Fecha</legend>
+                  <input type="text" class="form-control form-control-sm fecha mb-1" name="fecha_desde"
+                         placeholder="Desde" data-provide="datepicker" {% if request.GET.fecha_desde %}
+                         value="{{ request.GET.fecha_desde }}"{% endif %}>
+                  <input type="text" class="form-control form-control-sm fecha mt-1" name="fecha_hasta"
+                         placeholder="Hasta" data-provide="datepicker"
+                         {% if request.GET.fecha_hasta %}value="{{ request.GET.fecha_hasta }}"{% endif %}>
+                </fieldset>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12">
+              <fieldset>
+                <legend class="form-label">Monto</legend>
+                <input type="text" class="form-control form-control-sm mb-1" name="monto_desde" placeholder="Desde"
+                       {% if request.GET.monto_desde %}value="{{ request.GET.monto_desde }}"{% endif %}>
+                <input type="text" class="form-control form-control-sm my-1" name="monto_hasta" placeholder="Hasta"
+                       {% if request.GET.fecha_hasta %}value="{{ request.GET.monto_hasta }}"{% endif %}>
+              </fieldset>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12">
+              <button type="submit" class="btn btn-primary">Aplicar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">
+            Fecha
+            <div class="float-right">
+              {% if orden == 'fecha' %}
+                <a href="{% url 'core:donaciones' %}?{% query_transform request orden='-fecha' %}">
+                  <i class="icon-sort-asc"></i>
+                </a>
+              {% elif orden == '-fecha' %}
+                <a href="{% url 'core:donaciones' %}?{% query_transform request orden='' %}">
+                  <i class="icon-sort-desc"></i>
+                </a>
+              {% else %}
+                <a href="{% url 'core:donaciones' %}?{% query_transform request orden='fecha' %}">
+                  <i class="icon-sort"></i>
+                </a>
+              {% endif %}
+            </div>
+          </th>
+          <th scope="col">
+            Donante
+            <div class="float-right">
+              {% if orden == 'donante' %}
+                <a href="{% url 'core:donaciones' %}?{% query_transform request orden='-donante' %}">
+                  <i class="icon-sort-asc"></i>
+                </a>
+              {% elif orden == '-donante' %}
+                <a href="{% url 'core:donaciones' %}?{% query_transform request orden='' %}">
+                  <i class="icon-sort-desc"></i>
+                </a>
+              {% else %}
+                <a href="{% url 'core:donaciones' %}?{% query_transform request orden='donante' %}">
+                  <i class="icon-sort"></i>
+                </a>
+              {% endif %}
+            </div>
+          </th>
+          <th scope="col">Cuenta Nro.</th>
+          <th scope="col">Comprobante Nro.</th>
+          <th class="text-nowrap" scope="col">Recibo Nro.</th>
+          <th scope="col">Monto Gs.</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for donacion in donaciones %}
+          <tr>
+            <td>{{ donacion.fecha|date:'j/m/Y' }}</td>
+            {% if donacion.es_anonimo %}
+              <td>Información obrante en el CIRD*</td>
+            {% else %}
+              <td>{{ donacion.donante }}</td>
+            {% endif %}
+            <td>{{ donacion.cuenta }}</td>
+            <td class="text-nowrap">{{ donacion.nro_comprobante }}</td>
+            {% if donacion.recibo_nro %}
+              <td>{{ donacion.recibo_nro|intcomma }}</td>
+            {% else %}
+              <td></td>
+            {% endif %}
+            <td class="text-right text-nowrap">{{ donacion.get_monto_pyg|floatformat:0|intcomma }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div> <!-- table-responsive -->
+    <div class="float-right">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle btn-action" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Descargar
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Excel</a>
+          <a class="dropdown-item" target="_blank" href="{% url 'core:donaciones-json' %}">JSON</a>
+        </div>
+      </div>
+    </div>
+    {% if is_paginated %}
+      {% include 'core/partials/paginator.html' %}
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+  <script src="{% static 'locales/bootstrap-datepicker.es.min.js' %}"></script>
+  <script>
+      $('#fecha').datepicker({
+          inputs: $('.fecha'),
+          disableTouchKeyboard: true,
+          format: 'dd/mm/yyyy',
+          language: 'es',
+          endDate: '{% now 'd/m/Y' %}'
+      });
+  </script>
+  <script>
+    let showFiltros = false;
+    $('#filtrosBtn').click(function(event) {
+        showFiltros = ! showFiltros;
+        if (showFiltros) {
+            $('#filtrosArrow').addClass('icon-chevron-up').removeClass('icon-chevron-down');
+        } else {
+            $('#filtrosArrow').addClass('icon-chevron-down').removeClass('icon-chevron-up');
+        }
+    })
+  </script>
+{% endblock %}

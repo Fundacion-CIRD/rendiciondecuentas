@@ -1,8 +1,9 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.datetime_safe import strftime
+
+from utils.models import UnidadMedida, TipoCambio
+from utils.constants import PYG, MONEDA_CHOICES
 
 
 class Entidad(models.Model):
@@ -18,17 +19,22 @@ class Entidad(models.Model):
         return self.nombre
 
 
+class TipoCuenta(models.Model):
+    nombre = models.CharField(max_length=100, verbose_name='Nombre')
+
+    class Meta:
+        verbose_name = 'Tipo de Cuenta'
+        verbose_name_plural = 'Tipos de Cuenta'
+
+    def __str__(self):
+        return self.nombre
+
+
 class Cuenta(models.Model):
-    CTA_CTE = 'banco_cta_cte'
-    CAJA_AHORRO = 'banco_caja_ahorro'
-    GIRO = 'giro'
-    TIPO_CHOICES = (
-        (CTA_CTE, 'Cuenta Corriente'),
-        (CAJA_AHORRO, 'Caja de Ahorro'),
-        (GIRO, 'Giro bancario')
-    )
     entidad = models.ForeignKey(Entidad, on_delete=models.PROTECT, related_name='+', verbose_name='Entidad')
-    tipo = models.CharField(max_length=50, choices=TIPO_CHOICES, verbose_name='tipo')
+    tipo = models.ForeignKey(
+        TipoCuenta, on_delete=models.PROTECT, related_name='cuentas', verbose_name='Tipo de Cuenta')
+    moneda = models.CharField(max_length=3, choices=MONEDA_CHOICES, default=PYG, verbose_name='Moneda')
     nro = models.CharField(max_length=50, verbose_name='Cuenta Nro.')
 
     class Meta:
@@ -37,113 +43,160 @@ class Cuenta(models.Model):
         verbose_name_plural = 'Cuentas'
 
     def __str__(self):
-        return '{}: {} {}'.format(self.entidad.nombre, self.get_tipo_display(), self.nro)
-
-
-class Cambio(models.Model):
-    USD = 'USD'
-    MONEDA_CHOICES = ((USD, 'Dólares Americanos'),)
-    fecha = models.DateField(verbose_name='fecha')
-    cambio = models.FloatField(verbose_name='cambio')
-    moneda = models.CharField(max_length=3, choices=MONEDA_CHOICES, default=USD, verbose_name='moneda')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ('-fecha',)
-        verbose_name = 'Cambio'
-        verbose_name_plural = 'Cambios'
-
-    def __str__(self):
-        fecha_str = strftime(self.fecha, '%d/%m/%Y')
-        return '{} {}'.format(fecha_str, self.cambio)
-
-
-class Documento(models.Model):
-    archivo = models.FileField(upload_to='documentos', verbose_name='Archivo')
-    descripcion = models.TextField(default='', blank=True, verbose_name='Descripción')
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-
-    class Meta:
-        verbose_name = 'Documento'
-        verbose_name_plural = 'Documentos'
-
-    def __str__(self):
-        if len(self.descripcion) > 20:
-            return '{}...'.format(self.descripcion[:17])
-        return self.descripcion
+        return '{}: {} {} {}'.format(self.entidad.nombre, self.tipo.nombre, self.get_moneda_display(), self.nro)
 
 
 class Donacion(models.Model):
     fecha = models.DateField(verbose_name='fecha')
-    origen = models.ForeignKey(Entidad, on_delete=models.PROTECT, related_name='+', verbose_name='origen')
+    donante = models.ForeignKey(Entidad, on_delete=models.PROTECT, related_name='+', verbose_name='nombre')
     cuenta = models.ForeignKey(Cuenta, on_delete=models.PROTECT, related_name='ingresos', verbose_name='cuenta')
     nro_comprobante = models.CharField(max_length=50, verbose_name='Comprobante Nro.')
-    recibo_nro = models.IntegerField(verbose_name='Recibo de Donación Nro.')
-    monto_pyg = models.FloatField(null=True, blank=True, verbose_name='Monto Gs.')
-    monto_usd = models.FloatField(null=True, blank=True, verbose_name='Monto USD')
-    es_anonimo = models.BooleanField(default=False, verbose_name='Publicar como donación anónima')
+    recibo_nro = models.IntegerField(null=True, blank=True, verbose_name='Recibo de Donación Nro.')
+    monto = models.FloatField(verbose_name='Monto')
+    moneda = models.CharField(max_length=3, choices=MONEDA_CHOICES, default=PYG, verbose_name='Moneda')
+    es_anonimo = models.BooleanField(
+        default=True, verbose_name='Donante Anonimo',
+        help_text='Desmarcar la casilla si el donante desea que su nombre aparezca en la web')
+    _monto_pyg = models.FloatField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ('-fecha',)
-        verbose_name = 'Donación'
-        verbose_name_plural = 'Donaciones'
+        verbose_name = 'Donación Recibida'
+        verbose_name_plural = 'Donaciones Recibidas'
 
     def __str__(self):
-        # fecha_str = strftime(self.fecha, '%d/%m/%Y')
-        return '{} ({})'.format(self.origen, self.fecha)
+        return '{} ({})'.format(self.donante, self.fecha)
+
+    def save(self, *args, **kwargs):
+        if self.moneda != PYG:
+            cambio = self.get_tipo_cambio().cambio
+            self._monto_pyg = self.monto * cambio
+        else:
+            self._monto_pyg = self.monto
+        super().save(*args, **kwargs)
+
+    def get_tipo_cambio(self):
+        try:
+            tipo_cambio = TipoCambio.objects.get(fecha=self.fecha, moneda=self.moneda)
+        except TipoCambio.DoesNotExist:
+            return None
+        return tipo_cambio
+
+    def get_monto_pyg(self):
+        return self._monto_pyg
 
     def clean(self):
-        if self.monto_pyg and self.monto_usd:
-            raise ValidationError('No se permiten montos en Gs. y USD al mismo tiempo.')
+        if self.moneda != PYG and not TipoCambio.objects.filter(fecha=self.fecha, moneda=self.moneda).exists():
+            raise ValidationError(
+                'No se encontró un tipo de cambio para la fecha. Favor ingresar primeramente un tipo de cambio.')
+
+
+class Concepto(models.Model):
+    nombre = models.CharField(max_length=200, verbose_name='Nombre')
+    descripcion = models.TextField(
+        default='', blank=True, verbose_name='Descripción',
+        help_text='Detalles del objeto: Para qué sirve, dónde se usa, etc.')
+    medida = models.ForeignKey(
+        UnidadMedida, null=True, blank=True, on_delete=models.PROTECT, verbose_name='Unidad de Medida')
+    padre = models.ForeignKey(
+        'Concepto', null=True, blank=True, on_delete=models.PROTECT, related_name='sub_conceptos', verbose_name='Padre')
+
+    class Meta:
+        ordering = ('nombre',)
+        verbose_name = 'Concepto'
+        verbose_name_plural = 'Conceptos'
+
+    def __str__(self):
+        if self.padre:
+            return '{}: {} ({})'.format(self.padre.nombre, self.nombre, self.medida)
+        return '{} ({})'.format(self.nombre, self.medida)
+
+    def clean(self):
+        try:
+            self.padre
+        except Concepto.DoesNotExist:
+            if not self.medida:
+                raise ValidationError('Debe Seleccionar una Unidad de Medida')
+
+
+# class Beneficiario(models.Model):
+#     entidad = models.ForeignKey(Entidad, on_delete=models.PROTECT, related_name='+', verbose_name='Entidad')
+#     compra = models.ForeignKey('Compra', on_delete=models.PROTECT, related_name='+', verbose_name='Compra')
+#     recibido_por = models.CharField(max_length=254, verbose_name='Recibido por', help_text='Nombre y Cargo')
+#
+#     class Meta:
+#         verbose_name = 'Beneficiario'
+#         verbose_name_plural = 'Beneficiarios'
+#
+#     def __str__(self):
+#         return self.entidad
+
+
+class ItemCompra(models.Model):
+    compra = models.ForeignKey('Compra', on_delete=models.PROTECT, related_name='items', verbose_name='Compra')
+    concepto = models.ForeignKey('Concepto', on_delete=models.PROTECT, related_name='+', verbose_name='Concepto')
+    cantidad = models.FloatField(verbose_name='Cantidad')
+    precio_unitario = models.FloatField(verbose_name='Precio Unitario')
+    precio_total = models.FloatField(verbose_name='Precio Total')
+    _precio_unitario_pyg = models.FloatField(editable=False)
+    _precio_total_pyg = models.FloatField()
+
+    class Meta:
+        verbose_name = 'Item'
+        verbose_name_plural = 'Items'
+
+    def __str__(self):
+        return '{}: {}'.format(self.concepto, self.cantidad)
+
+    def save(self, *args, **kwargs):
+        if self.compra.moneda != PYG:
+            cambio = TipoCambio.objects.get(fecha=self.compra.fecha, moneda=self.compra.moneda).cambio
+            self._precio_unitario_pyg = self.precio_unitario * cambio
+            self._precio_total_pyg = self.precio_total * cambio
+        else:
+            self._precio_unitario_pyg = self.precio_unitario
+            self._precio_total_pyg = self.precio_total
+        super().save(*args, **kwargs)
+
+    def clean(self):
+        if self.cantidad * self.precio_unitario != self.precio_total:
+            raise ValidationError('El Producto de Cantidad y Precio Unitario no coincide con el Precio Total.')
+        if not self.concepto.padre:
+            raise ValidationError('Debe seleccionar un Concepto detallado.')
+
+
+class TipoComprobante(models.Model):
+    nombre = models.CharField(max_length=100, verbose_name='Nombre')
+
+    class Meta:
+        verbose_name = 'Tipo de Comprobante'
+        verbose_name_plural = 'Tipos de Comprobante'
+
+    def __str__(self):
+        return self.nombre
 
 
 class Compra(models.Model):
-    FACTURA = 1
-    RECIBO = 2
-    TIPO_COMPROBANTE_CHOICES = (
-        (FACTURA, 'Factura'),
-        (RECIBO, 'Recibo Legal'),
-    )
     fecha = models.DateField(verbose_name='fecha')
-    proveedor = models.ForeignKey(Entidad, on_delete=models.PROTECT, related_name='+', verbose_name='Proveedor/Oferente')
-    tipo_comprobante = models.IntegerField(choices=TIPO_COMPROBANTE_CHOICES, verbose_name='Tipo de Comprobante')
+    proveedor = models.ForeignKey(Entidad, on_delete=models.PROTECT, related_name='+',
+                                  verbose_name='Proveedor/Oferente')
+    tipo_comprobante = models.ForeignKey(TipoComprobante, default=1, on_delete=models.PROTECT,
+                                         verbose_name='Tipo de Comprobante')
     nro_timbrado = models.IntegerField(null=True, blank=True, verbose_name='Timbrado Nro.')
     nro_comprobante = models.CharField(max_length=50, verbose_name='Comprobante Nro.')
-    nro_op = models.CharField(max_length=50, verbose_name='O.P. Nro.')
-    concepto = models.CharField(max_length=254, verbose_name='Concepto')
-    cantidad = models.FloatField(verbose_name='Cantidad')
-    precio_unidad_pyg = models.FloatField(null=True, blank=True, verbose_name='Precio unitario Gs.')
-    precio_total_pyg = models.FloatField(null=True, blank=True, verbose_name='Precio total Gs.')
-    precio_unidad_usd = models.FloatField(null=True, blank=True, verbose_name='Precio unitario USD.')
-    precio_total_usd = models.FloatField(null=True, blank=True, verbose_name='Precio total USD.')
-    beneficiario = models.ForeignKey(
-        Entidad, on_delete=models.PROTECT, related_name='+', verbose_name=('Institución Beneficiada'),
-        help_text='A qué establecimiento se entregó la donación')
-    recepcion_donacion = models.CharField(
-        max_length=254, verbose_name='Recepción de la Donación', help_text='Quién recibió la donación')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    nro_orden_pago = models.CharField(max_length=50, verbose_name='Orden de Pago Nro.')
+    moneda = models.CharField(max_length=3, choices=MONEDA_CHOICES, default=PYG, verbose_name='Moneda')
 
     class Meta:
         ordering = ('-fecha',)
-        verbose_name = 'Compra/Destino de la donación'
-        verbose_name_plural = 'Compras/Destino de las donaciones'
+        verbose_name = 'Adquisición Realizada/Destino'
+        verbose_name_plural = 'Adquisiciones Realizadas/Destinos'
 
     def __str__(self):
-        # fecha_str = strftime(self.fecha, '%d/%m/%Y')
         return '{} - {}'.format(self.fecha, self.proveedor)
 
     def clean(self):
-        if (self.precio_unidad_pyg or self.precio_total_usd) and (self.precio_unidad_usd or self.precio_total_usd):
-            raise ValidationError('No se permiten montos en Gs. y USD al mismo tiempo.')
-        if self.precio_unidad_pyg and not self.precio_total_pyg or not self.precio_unidad_pyg and self.precio_total_pyg:
-            raise ValidationError('Debe cargar precio unitario y precio total.')
-        if self.precio_unidad_usd and not self.precio_total_usd or not self.precio_unidad_usd and self.precio_total_usd:
-            raise ValidationError('Debe cargar precio unitario y precio total.')
-        if self.precio_unidad_usd and not self.precio_total_usd == self.precio_unidad_usd * self.cantidad:
-            raise ValidationError('El precio total no coincide con el producto de Precio Unitario x Cantidad')
-        if self.precio_unidad_pyg and not self.precio_total_pyg == self.precio_unidad_pyg * self.cantidad:
-            raise ValidationError('El precio total no coincide con el producto de Precio Unitario x Cantidad')
+        if self.moneda != PYG and not TipoCambio.objects.filter(fecha=self.fecha, moneda=self.moneda).exists():
+            raise ValidationError(
+                'No se encontró un tipo de cambio para la fecha. Favor ingresar primeramente un tipo de cambio.')

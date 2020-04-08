@@ -130,3 +130,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 uploads/
+static_compiled/
+node_modules/
+secrets.json

@@ -1,0 +1,17 @@
+{
+  "name": "donaciones_cird",
+  "version": "1.0.0",
+  "description": "Sistema de Donaciones del CIRD",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "node-sass": "^4.13.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "compile:css": "node_modules/.bin/node-sass -o ../static_compiled/css sass --output-style compressed",
+    "compile:css:watch": "node_modules/.bin/node-sass -o ../static_compiled/css sass --watch"
+  },
+  "author": "",
+  "license": "ISC"
+}
