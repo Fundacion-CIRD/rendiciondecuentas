@@ -21,7 +21,7 @@
         <div class="col-lg-4 nav flex-column align-items-lg-end align-items-center justify-content-center mt-4 mt-lg-0">
           <a class="text-center" href="#resumen">Resumen</a>
           <a class="text-center" href="{% url 'core:donaciones' %}">Donaciones Recibidas</a>
-          <a class="text-center" href="#">Adquisiciones Ejecutadas</a>
+          <a class="text-center" href="{% url 'core:adquisiciones' %}">Adquisiciones Ejecutadas</a>
         </div>
       </div>
       <div class="datos-abiertos d-lg-none">
@@ -91,7 +91,7 @@
     </div> <!-- resumen-nros -->
     <div class="graficos">
       <div class="w-100 d-flex justify-content-center ver-mas">
-        <a href="#" class="btn btn-primary">Ver más insumos adquiridos</a>
+        <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver más insumos adquiridos</a>
       </div>
     </div> <!-- graficos -->
   </div><!-- container -->
