@@ -23,7 +23,7 @@ class HomeView(TemplateView):
 class DonacionesView(ListView):
     template_name = 'core/donaciones.html'
     model = Donacion
-    paginate_by = 2
+    paginate_by = 20
     filterset_fields = ('donante', 'fecha_desde', 'fecha_hasta', 'monto_desde', 'monto_hasta')
     internal_filters = {
         'donante': 'donante__nombre__icontains',
