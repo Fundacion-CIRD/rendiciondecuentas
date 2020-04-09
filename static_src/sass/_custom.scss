@@ -471,6 +471,16 @@ hr {
   font-size: .8rem;
 }
 
+.tabla {
+  th {
+    a {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
 @media (min-width: map_get($grid-breakpoints, 'md')) {
   .py-logos {
     height: 120px;
