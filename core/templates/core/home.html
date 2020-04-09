@@ -21,7 +21,7 @@
         <div class="col-lg-4 nav flex-column align-items-lg-end align-items-center justify-content-center mt-4 mt-lg-0">
           <a class="text-center" href="#resumen">Resumen</a>
           <a class="text-center" href="{% url 'core:donaciones' %}">Donaciones Recibidas</a>
-          <a class="text-center" href="#">Adquisiciones Realizadas</a>
+          <a class="text-center" href="#">Adquisiciones Ejecutadas</a>
         </div>
       </div>
       <div class="datos-abiertos d-lg-none">
@@ -85,7 +85,7 @@
         <div class="desc">Total Donaciones Recibidas</div>
       </div>
       <div class="col-md-6 mt-4 mt-md-0">
-        <div class="monto">Gs. 43.800.298</div>
+        <div class="monto">Gs. {{ total_adquisiciones|floatformat:0|intcomma }}</div>
         <div class="desc">Total Adquisiciones Ejecutadas</div>
       </div>
     </div> <!-- resumen-nros -->

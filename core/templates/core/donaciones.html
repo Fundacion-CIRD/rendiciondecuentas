@@ -47,7 +47,7 @@
                          value="{{ request.GET.fecha_desde }}"{% endif %}>
                   <input type="text" class="form-control form-control-sm fecha mt-1" name="fecha_hasta"
                          placeholder="Hasta" data-provide="datepicker"
-                         {% if request.GET.fecha_hasta %}value="{{ request.GET.fecha_hasta }}"{% endif %}>
+                         {% if request.GET.monto_hasta %}value="{{ request.GET.fecha_hasta }}"{% endif %}>
                 </fieldset>
               </div>
             </div>
@@ -67,7 +67,10 @@
         </form>
       </div>
     </div>
-    <div class="table-responsive">
+    <div class="mt-2">
+      <small>Total de items encontrados: {{ donacion_list.count }}</small>
+    </div>
+    <div class="table-responsive tabla">
       <table class="table table-hover">
         <thead>
         <tr>
@@ -110,7 +113,24 @@
           <th scope="col">Cuenta Nro.</th>
           <th scope="col">Comprobante Nro.</th>
           <th class="text-nowrap" scope="col">Recibo Nro.</th>
-          <th scope="col">Monto Gs.</th>
+          <th scope="col">
+            Monto Gs.
+            <div class="float-right">
+              {% if orden == 'monto' %}
+                <a href="{% url 'core:donaciones' %}?{% query_transform request orden='-monto' %}">
+                  <i class="icon-sort-asc"></i>
+                </a>
+              {% elif orden == '-monto' %}
+                <a href="{% url 'core:donaciones' %}?{% query_transform request orden='' %}">
+                  <i class="icon-sort-desc"></i>
+                </a>
+              {% else %}
+                <a href="{% url 'core:donaciones' %}?{% query_transform request orden='monto' %}">
+                  <i class="icon-sort"></i>
+                </a>
+              {% endif %}
+            </div>
+          </th>
         </tr>
         </thead>
         <tbody>

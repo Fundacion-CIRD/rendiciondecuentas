@@ -102,6 +102,10 @@ nav.navbar {
   }
 }
 
+.tabla {
+  font-size: 0.88rem;
+}
+
 .py-logos {
   height: 108px;
   padding-top: 1rem;
@@ -468,10 +472,10 @@ hr {
 }
 
 @media (min-width: map_get($grid-breakpoints, 'md')) {
-  height: 120px;
   .py-logos {
-    .mspbs {max-height: 70px; }
+    height: 120px;
     .gob-nac { max-height: 39px; }
+    .mspbs { max-height: 70px; }
     .py-gente { max-height: 56px; }
     .cird { max-height: 53px; }
   }

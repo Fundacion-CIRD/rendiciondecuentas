@@ -1,0 +1,189 @@
+{% extends 'core/base.html' %}
+{% load static %} {% load humanize %} {% load query_utils %}
+
+{% block styles %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
+{% endblock %}
+
+{% block title %}
+  Adquisiciones | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  {% include 'core/partials/navbar.html' %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>Adquisiciones Ejecutadas</h2>
+      </div>
+      <div class="col-md-4 mt-2 mt-md-0 d-flex align-items-md-end" style="margin-bottom: 24px">
+        <button type="button" data-toggle="collapse" data-target="#filtros" class="btn btn-secondary" id="filtrosBtn">
+          <span class="w-100 d-flex align-items-center justify-content-between">
+            <span>Filtros</span>
+            <i class="icon-chevron-down" id="filtrosArrow"></i>
+          </span>
+        </button>
+      </div>
+    </div> <!-- row -->
+    <div class="collapse" id="filtros">
+      <div class="card card-body">
+        <form>
+          <div class="row">
+            <div class="col-lg-3 col-sm-6 col-12">
+              <div class="form-group">
+                <label class="form-label" for="proveedor">Proveedor</label>
+                <input type="text" class="form-control form-control-sm" id="proveedor" name="proveedor"
+                       {% if request.GET.proveedor %}value="{{ request.GET.proveedor }}"{% endif %}>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12">
+              <div class="form-group" id="fecha">
+                <fieldset>
+                  <legend class="form-label">Fecha</legend>
+                  <input type="text" class="form-control form-control-sm fecha mb-1" name="fecha_desde"
+                         placeholder="Desde" data-provide="datepicker" {% if request.GET.fecha_desde %}
+                         value="{{ request.GET.fecha_desde }}"{% endif %}>
+                  <input type="text" class="form-control form-control-sm fecha mt-1" name="fecha_hasta"
+                         placeholder="Hasta" data-provide="datepicker"
+                         {% if request.GET.fecha_hasta %}value="{{ request.GET.fecha_hasta }}"{% endif %}>
+                </fieldset>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12">
+              <fieldset>
+                <legend class="form-label">Monto</legend>
+                <input type="text" class="form-control form-control-sm mb-1" name="monto_desde" placeholder="Desde"
+                       {% if request.GET.monto_desde %}value="{{ request.GET.monto_desde }}"{% endif %}>
+                <input type="text" class="form-control form-control-sm my-1" name="monto_hasta" placeholder="Hasta"
+                       {% if request.GET.monto_hasta %}value="{{ request.GET.monto_hasta }}"{% endif %}>
+              </fieldset>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12">
+              <button type="submit" class="btn btn-primary">Aplicar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div> <!-- #filtros -->
+    <div class="mt-2">
+      <small>Total de items encontrados: {{ compra_list.count }}</small>
+    </div>
+    <div class="table-responsive tabla">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">
+            <div class="d-flex justify-content-between">
+              <span class="mr-1">Fecha</span>
+              <div>
+                {% if orden == 'fecha' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='-fecha' %}">
+                    <i class="icon-sort-asc"></i>
+                  </a>
+                {% elif orden == '-fecha' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='' %}">
+                    <i class="icon-sort-desc"></i>
+                  </a>
+                {% else %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='fecha' %}">
+                    <i class="icon-sort"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </th>
+          <th scope="col">
+            <div class="d-flex justify-content-between">
+              <span class="mr-1">Proveedor</span>
+              <div>
+                {% if orden == 'proveedor' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='-proveedor' %}">
+                    <i class="icon-sort-asc"></i>
+                  </a>
+                {% elif orden == '-proveedor' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='' %}">
+                    <i class="icon-sort-desc"></i>
+                  </a>
+                {% else %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='proveedor' %}">
+                    <i class="icon-sort"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </th>
+          <th scope="col">Tipo de Comprobante</th>
+          <th scope="col">Comprobante Nro.</th>
+          <th class="text-nowrap" scope="col">Timbrado Nro.</th>
+          <th class="text-nowrap" scope="col">Cheque Nro.</th>
+          <th class="text-nowrap" scope="col">
+            <div class="d-flex justify-content-between">
+              <span class="mr-1">Monto Gs.</span>
+              <div>
+                {% if orden == 'monto' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='-monto' %}">
+                    <i class="icon-sort-asc"></i>
+                  </a>
+                {% elif orden == '-monto' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='' %}">
+                    <i class="icon-sort-desc"></i>
+                  </a>
+                {% else %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='monto' %}">
+                    <i class="icon-sort"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for adquisicion in adquisiciones %}
+          <tr>
+            <td>{{ adquisicion.fecha|date:'j/m/Y' }}</td>
+            <td>{{ adquisicion.proveedor }}</td>
+            <td>{{ adquisicion.tipo_comprobante }}</td>
+            <td>{{ adquisicion.nro_comprobante }}</td>
+            <td class="text-nowrap">{{ adquisicion.timbrado }}</td>
+            <td>{{ adquisicion.nro_cheque }}</td>
+            <td class="text-right text-nowrap">{{ adquisicion.monto_pyg|floatformat:0|intcomma }}</td>
+            <td class="text-nowrap"><a href="#">Ver detalle</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div> <!-- table-responsive -->
+    {% if is_paginated %}
+      {% include 'core/partials/paginator.html' %}
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+  <script src="{% static 'locales/bootstrap-datepicker.es.min.js' %}"></script>
+  <script>
+      $('#fecha').datepicker({
+          inputs: $('.fecha'),
+          disableTouchKeyboard: true,
+          format: 'dd/mm/yyyy',
+          language: 'es',
+          endDate: '{% now 'd/m/Y' %}'
+      });
+  </script>
+  <script>
+    let showFiltros = false;
+    $('#filtrosBtn').click(function(event) {
+        showFiltros = ! showFiltros;
+        if (showFiltros) {
+            $('#filtrosArrow').addClass('icon-chevron-up').removeClass('icon-chevron-down');
+        } else {
+            $('#filtrosArrow').addClass('icon-chevron-down').removeClass('icon-chevron-up');
+        }
+    })
+  </script>
+{% endblock %}

@@ -7,7 +7,13 @@ from utils.constants import PYG, MONEDA_CHOICES
 
 
 class Entidad(models.Model):
+    INDIVIDUO = 1
+    EMPRESA = 2
+    TIPO_ENTIDAD_CHOICES = ((INDIVIDUO, 'Individuo'), (EMPRESA, 'Empresa'))
     nombre = models.CharField(max_length=254, db_index=True, verbose_name='nombre')
+    ruc = models.CharField(max_length=20, default='', blank=True, verbose_name='RUC')
+    tipo_entidad = models.PositiveSmallIntegerField(
+        choices=TIPO_ENTIDAD_CHOICES, default=INDIVIDUO, verbose_name='Tipo')
     info_extra = models.TextField(default='', blank=True, verbose_name='Información Adicional')
 
     class Meta:
@@ -57,7 +63,7 @@ class Donacion(models.Model):
     es_anonimo = models.BooleanField(
         default=True, verbose_name='Donante Anonimo',
         help_text='Desmarcar la casilla si el donante desea que su nombre aparezca en la web')
-    _monto_pyg = models.FloatField(editable=False)
+    monto_pyg = models.FloatField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -71,9 +77,9 @@ class Donacion(models.Model):
     def save(self, *args, **kwargs):
         if self.moneda != PYG:
             cambio = self.get_tipo_cambio().cambio
-            self._monto_pyg = self.monto * cambio
+            self.monto_pyg = self.monto * cambio
         else:
-            self._monto_pyg = self.monto
+            self.monto_pyg = self.monto
         super().save(*args, **kwargs)
 
     def get_tipo_cambio(self):
@@ -84,7 +90,7 @@ class Donacion(models.Model):
         return tipo_cambio
 
     def get_monto_pyg(self):
-        return self._monto_pyg
+        return self.monto_pyg
 
     def clean(self):
         if self.moneda != PYG and not TipoCambio.objects.filter(fecha=self.fecha, moneda=self.moneda).exists():
@@ -139,8 +145,8 @@ class ItemCompra(models.Model):
     cantidad = models.FloatField(verbose_name='Cantidad')
     precio_unitario = models.FloatField(verbose_name='Precio Unitario')
     precio_total = models.FloatField(verbose_name='Precio Total')
-    _precio_unitario_pyg = models.FloatField(editable=False)
-    _precio_total_pyg = models.FloatField()
+    precio_unitario_pyg = models.FloatField(editable=False)
+    precio_total_pyg = models.FloatField(editable=False)
 
     class Meta:
         verbose_name = 'Item'
@@ -152,18 +158,22 @@ class ItemCompra(models.Model):
     def save(self, *args, **kwargs):
         if self.compra.moneda != PYG:
             cambio = TipoCambio.objects.get(fecha=self.compra.fecha, moneda=self.compra.moneda).cambio
-            self._precio_unitario_pyg = self.precio_unitario * cambio
-            self._precio_total_pyg = self.precio_total * cambio
+            self.precio_unitario_pyg = self.precio_unitario * cambio
+            self.precio_total_pyg = self.precio_total * cambio
         else:
-            self._precio_unitario_pyg = self.precio_unitario
-            self._precio_total_pyg = self.precio_total
+            self.precio_unitario_pyg = self.precio_unitario
+            self.precio_total_pyg = self.precio_total
         super().save(*args, **kwargs)
 
     def clean(self):
         if self.cantidad * self.precio_unitario != self.precio_total:
             raise ValidationError('El Producto de Cantidad y Precio Unitario no coincide con el Precio Total.')
-        if not self.concepto.padre:
-            raise ValidationError('Debe seleccionar un Concepto detallado.')
+
+    def get_precio_unitario(self):
+        return self.precio_unitario_pyg
+
+    def get_precio_total(self):
+        return self.precio_total_pyg
 
 
 class TipoComprobante(models.Model):
@@ -185,7 +195,7 @@ class Compra(models.Model):
                                          verbose_name='Tipo de Comprobante')
     nro_timbrado = models.IntegerField(null=True, blank=True, verbose_name='Timbrado Nro.')
     nro_comprobante = models.CharField(max_length=50, verbose_name='Comprobante Nro.')
-    nro_orden_pago = models.CharField(max_length=50, verbose_name='Orden de Pago Nro.')
+    nro_cheque = models.CharField(max_length=50, verbose_name='Cheque Nro.')
     moneda = models.CharField(max_length=3, choices=MONEDA_CHOICES, default=PYG, verbose_name='Moneda')
 
     class Meta:
@@ -200,3 +210,9 @@ class Compra(models.Model):
         if self.moneda != PYG and not TipoCambio.objects.filter(fecha=self.fecha, moneda=self.moneda).exists():
             raise ValidationError(
                 'No se encontró un tipo de cambio para la fecha. Favor ingresar primeramente un tipo de cambio.')
+
+    def get_total_pyg(self):
+        suma = 0
+        for item in self.items.all():
+            suma += item.precio_total_pyg
+        return suma
