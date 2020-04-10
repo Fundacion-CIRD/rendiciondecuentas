@@ -106,9 +106,9 @@ def descargar_donaciones(request):
         worksheet.write(row, 1, str(donacion.fecha))
         worksheet.write(row, 2, str(donacion.donante) if not donacion.es_anonimo else 'Información Obrante en el CIRD')
         # worksheet.write(row, 3, str(donacion.cuenta))
-        worksheet.write(row, 4, donacion.nro_comprobante)
-        worksheet.write(row, 5, donacion.recibo_nro)
-        worksheet.write(row, 6, '%.0f' % donacion.monto_pyg)
+        worksheet.write(row, 3, donacion.nro_comprobante)
+        worksheet.write(row, 4, donacion.recibo_nro)
+        worksheet.write(row, 5, '%.0f' % donacion.monto_pyg)
         row += 1
     workbook.close()
     buffer.seek(0)
