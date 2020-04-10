@@ -150,7 +150,7 @@
             <td class="text-nowrap">{{ adquisicion.timbrado }}</td>
             <td>{{ adquisicion.nro_cheque }}</td>
             <td class="text-right text-nowrap">{{ adquisicion.monto_pyg|floatformat:0|intcomma }}</td>
-            <td class="text-nowrap"><a href="#">Ver detalle</a></td>
+            <td class="text-nowrap"><a href="{% url 'core:detalle-adquisiciones' adquisicion.id %}">Ver detalle</a></td>
           </tr>
         {% endfor %}
         </tbody>

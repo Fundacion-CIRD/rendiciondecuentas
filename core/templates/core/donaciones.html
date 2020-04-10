@@ -18,7 +18,7 @@
       <div class="col-md-8">
         <h2>Donaciones Recibidas</h2>
       </div>
-      <div class="col-md-4 mt-2 mt-md-0 d-flex align-items-md-end" style="margin-bottom: 24px">
+      <div class="col-md-4 mt-2 mt-md-0 d-flex align-items-md-end justify-content-md-end" style="margin-bottom: 24px">
         <button type="button" data-toggle="collapse" data-target="#filtros" class="btn btn-secondary" id="filtrosBtn">
           <span class="w-100 d-flex align-items-center justify-content-between">
             <span>Filtros</span>
@@ -110,7 +110,7 @@
               {% endif %}
             </div>
           </th>
-          <th scope="col">Cuenta Nro.</th>
+{#          <th scope="col">Cuenta Nro.</th>#}
           <th scope="col">Comprobante Nro.</th>
           <th class="text-nowrap" scope="col">Recibo Nro.</th>
           <th scope="col">
@@ -142,7 +142,7 @@
             {% else %}
               <td>{{ donacion.donante }}</td>
             {% endif %}
-            <td>{{ donacion.cuenta }}</td>
+{#            <td>{{ donacion.cuenta }}</td>#}
             <td class="text-nowrap">{{ donacion.nro_comprobante }}</td>
             {% if donacion.recibo_nro %}
               <td>{{ donacion.recibo_nro|intcomma }}</td>
@@ -161,7 +161,7 @@
           Descargar
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Excel</a>
+          <a class="dropdown-item" href="{% url 'core:donaciones-excel' %}?{% query_transform request page=page_obj.paginator.num_pages %}">Excel</a>
           <a class="dropdown-item" target="_blank" href="{% url 'core:donaciones-json' %}">JSON</a>
         </div>
       </div>

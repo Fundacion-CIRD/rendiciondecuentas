@@ -1,22 +1,22 @@
-from django.core.paginator import Paginator
-from django.db.models import Sum, F, OuterRef, Subquery
-from django.shortcuts import render
-from django.views.generic import TemplateView, ListView
+from io import BytesIO
+
+import xlsxwriter
+from django.db.models import Sum
+from django.http import FileResponse
+from django.views.generic import TemplateView, ListView, DetailView
 from rest_framework.generics import ListAPIView
 
 from core.forms import DonacionesForm, AdquisicionesForm
-from core.models import Donacion, Compra
+from core.models import Donacion, Compra, ItemCompra
 from core.serializers import DonacionSerializer, CompraSerializer
-from utils.constants import PYG, USD
-from utils.models import TipoCambio
 
 
 def filter_query(form, qs, internal_filters):
-    filter_query = {}
+    fq = {}
     for key in form.cleaned_data:
         if form.cleaned_data[key]:
-            filter_query[internal_filters[key]] = form.cleaned_data[key]
-    qs = qs.filter(**filter_query).distinct()
+            fq[internal_filters[key]] = form.cleaned_data[key]
+    qs = qs.filter(**fq).distinct()
     return qs
 
 
@@ -35,7 +35,6 @@ class DonacionesView(ListView):
     template_name = 'core/donaciones.html'
     model = Donacion
     paginate_by = 10
-    filterset_fields = ('donante', 'fecha_desde', 'fecha_hasta', 'monto_desde', 'monto_hasta')
     internal_filters = {
         'donante': 'donante__nombre__icontains',
         'fecha_desde': 'fecha__gte',
@@ -79,11 +78,47 @@ class DonacionesView(ListView):
         return context
 
 
+def descargar_donaciones(request):
+    internal_filters = {
+        'donante': 'donante__nombre__icontains',
+        'fecha_desde': 'fecha__gte',
+        'fecha_hasta': 'fecha__lte',
+        'monto_desde': 'monto_pyg__gte',
+        'monto_hasta': 'monto_pyg__lte',
+    }
+    qs = Donacion.objects.all().select_related('donante')
+    form = DonacionesForm(data=request.GET)
+    if form.is_valid():
+        if form.cleaned_data.get('donante'):
+            qs = qs.filter(es_anonimo=False)
+        qs = filter_query(form, qs, internal_filters)
+    buffer = BytesIO()
+    workbook = xlsxwriter.Workbook(buffer)
+    worksheet = workbook.add_worksheet()
+    cabecera = ('ID', 'Fecha', 'Donante', 'Nro. Comprobante', 'Nro. Recibo', 'Monto')
+    row, col = (0, 0)
+    for el in cabecera:
+        worksheet.write(row, col, el)
+        col += 1
+    row = 1
+    for donacion in qs:
+        worksheet.write(row, 0, donacion.id)
+        worksheet.write(row, 1, str(donacion.fecha))
+        worksheet.write(row, 2, str(donacion.donante) if not donacion.es_anonimo else 'Información Obrante en el CIRD')
+        # worksheet.write(row, 3, str(donacion.cuenta))
+        worksheet.write(row, 4, donacion.nro_comprobante)
+        worksheet.write(row, 5, donacion.recibo_nro)
+        worksheet.write(row, 6, '%.0f' % donacion.monto_pyg)
+        row += 1
+    workbook.close()
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='donaciones.xlsx')
+
+
 class AdquisicionesView(ListView):
     template_name = 'core/adquisiciones.html'
     model = Compra
     paginate_by = 10
-    filterset_fields = ('proveedor', 'fecha_desde', 'fecha_hasta', 'monto_desde', 'monto_hasta')
     internal_filters = {
         'proveedor': 'proveedor__nombre__icontains',
         'fecha_desde': 'fecha__gte',
@@ -120,6 +155,70 @@ class AdquisicionesView(ListView):
         context = super().get_context_data(object_list=object_list, **kwargs)
         context['adquisiciones'] = context['page_obj'] if context.get('is_paginated') else context['compra_list']
         context['orden'] = self.request.GET.get('orden')
+        return context
+
+
+def descargar_adquisiciones(request):
+    internal_filters = {
+        'proveedor': 'proveedor__nombre__icontains',
+        'fecha_desde': 'fecha__gte',
+        'fecha_hasta': 'fecha__lte',
+        'monto_desde': 'monto_pyg__gte',
+        'monto_hasta': 'monto_pyg__lte',
+    }
+    adquisiciones = Compra.objects.all().prefetch_related('proveedor', 'items', 'tipo_comprobante')
+    adquisiciones = adquisiciones.annotate(monto_pyg=Sum('items__precio_total_pyg'))
+    form = AdquisicionesForm(data=request.GET)
+    if form.is_valid():
+        adquisiciones = filter_query(form, adquisiciones, internal_filters)
+    items = ItemCompra.objects.filter(compra__in=adquisiciones)
+    buffer = BytesIO()
+    workbook = xlsxwriter.Workbook(buffer)
+    worksheet = workbook.add_worksheet()
+    cabecera_adquisiciones = (
+        'ID', 'Fecha', 'Proveedor', 'Tipo de Comprobante', 'Nro. de Comprobante', 'Nro. de Timbrado', 'Nro. de Cheque',
+        'Total Adquisición')
+    cabecera_items = ('ID', 'ID Adquisición', 'Concepto', 'Cantidad', 'Precio Unitario', 'Precio Total')
+    row, col = (0, 0)
+    for el in cabecera_adquisiciones:
+        worksheet.write(row, col, el)
+        col += 1
+    row = 1
+    for adquisicion in adquisiciones:
+        worksheet.write(row, 0, adquisicion.id)
+        worksheet.write(row, 1, str(adquisicion.fecha))
+        worksheet.write(row, 2, str(adquisicion.proveedor))
+        worksheet.write(row, 4, str(adquisicion.tipo_comprobante))
+        worksheet.write(row, 5, adquisicion.nro_comprobante)
+        worksheet.write(row, 6, adquisicion.nro_timbrado)
+        worksheet.write(row, 7, adquisicion.nro_cheque)
+        worksheet.write(row, 6, '%.0f' % adquisicion.monto_pyg)
+        row += 1
+    worksheet = workbook.add_worksheet()
+    row, col = (0, 0)
+    for el in cabecera_items:
+        worksheet.write(row, col, el)
+        col += 1
+    row = 1
+    for item in items:
+        worksheet.write(row, 0, item.id)
+        worksheet.write(row, 1, item.compra.id)
+        worksheet.write(row, 2, str(item.concepto))
+        worksheet.write(row, 3, item.cantidad)
+        worksheet.write(row, 4, '%.0f' % item.precio_unitario_pyg)
+        worksheet.write(row, 5, '%.0f' % item.precio_total_pyg)
+    workbook.close()
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='adquisiciones.xlsx')
+
+
+class DetalleAdquisicionView(DetailView):
+    model = Compra
+    template_name = 'core/detalle_adquisicion.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_adquisicion'] = context['object'].items.aggregate(total=Sum('precio_total_pyg'))['total']
         return context
 
 

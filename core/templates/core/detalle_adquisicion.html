@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+{% load static %} {% load humanize %} {% load query_utils %}
+
+{% block styles %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
+{% endblock %}
+
+{% block title %}
+  Adquisiciones | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  {% include 'core/partials/navbar.html' %}
+  <div class="container">
+    <h2>Detalle de Adquisición</h2>
+    <div class="cabecera">
+      <table>
+        <tr>
+          <td>Fecha:</td>
+          <td>{{ object.fecha }}</td>
+        </tr>
+        <tr>
+          <td>Proveedor:</td>
+          <td>{{ object.proveedor }}</td>
+        </tr>
+        <tr>
+          <td>Tipo de comprobante:</td>
+          <td>{{ object.tipo_comprobante }}</td>
+        </tr>
+        <tr>
+          <td>Nro. de Comprobante:</td>
+          <td>{{ object.nro_comprobante }}</td>
+        </tr>
+        <tr>
+          <td>Nro. de Timbrado</td>
+          <td>{{ object.nro_timbrado }}</td>
+        </tr>
+        <tr>
+          <td>Nro. de Cheque</td>
+          <td>{{ object.nro_cheque }}</td>
+        </tr>
+        <tr>
+          <td>Total Adquisición:</td>
+          <td>{{ total_adquisicion|floatformat:0|intcomma }}</td>
+        </tr>
+      </table>
+    </div>
+    <h4 class="mt-4 font-weight-light">Ítems adquiridos</h4>
+    <table class="table table-responsive-md tabla">
+      <thead>
+        <tr>
+          <th class="text-nowrap" scope="col">Concepto</th>
+          <th class="text-nowrap text-center" scope="col">Cantidad</th>
+          <th class="text-nowrap text-right" scope="col">Precio Unitario</th>
+          <th class="text-nowrap text-right" scope="col">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in object.items.all %}
+          <tr>
+            <td>{{ item.concepto }}</td>
+            <td class="text-center">{{ item.cantidad }}</td>
+            <td class="text-right">{{ item.precio_unitario_pyg|floatformat:0|intcomma }}</td>
+            <td class="text-right">{{ item.precio_total_pyg|floatformat:0|intcomma }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -306,6 +306,9 @@ hr {
   &:last-child {
     margin-right: 0;
   }
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 .ver-mas {
@@ -479,6 +482,12 @@ hr {
       }
     }
   }
+}
+
+.cabecera tr td:first-child {
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 @media (min-width: map_get($grid-breakpoints, 'md')) {
