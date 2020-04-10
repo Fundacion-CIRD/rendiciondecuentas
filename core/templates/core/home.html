@@ -30,6 +30,24 @@
     </div>
   </div> <!-- banner -->
   <div class="container">
+    <h2>Resumen General</h2>
+    <div class="row resumen-nros">
+      <div class="col-md-6">
+        <div class="monto">Gs. {{ total_donaciones|floatformat:0|intcomma }}</div>
+        <div class="desc mb-4">Total Donaciones Recibidas</div>
+        <div class="d-flex align-items-center justify-content-center">
+          <a href="{% url 'core:donaciones' %}" class="btn btn-primary">Ver Donaciones</a>
+        </div>
+      </div>
+      <div class="col-md-6 mt-4 mt-md-0">
+        <div class="monto">Gs. {{ total_adquisiciones|floatformat:0|intcomma }}</div>
+        <div class="desc mb-4">Total Adquisiciones Ejecutadas</div>
+        <div class="d-flex align-items-center justify-content-center">
+          <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver Adquisiciones</a>
+        </div>
+      </div>
+    </div> <!-- resumen-nros -->
+    <hr>
     <div class="intro">
       <h2>Rendición de Donaciones COVID-19</h2>
       <div class="d-block d-md-none">
@@ -78,18 +96,9 @@
       <div id="resumen"></div>
     </div> <!-- intro -->
     <hr>
-    <h2>Resumen General</h2>
-    <div class="row resumen-nros">
-      <div class="col-md-6">
-        <div class="monto">Gs. {{ total_donaciones|floatformat:0|intcomma }}</div>
-        <div class="desc">Total Donaciones Recibidas</div>
-      </div>
-      <div class="col-md-6 mt-4 mt-md-0">
-        <div class="monto">Gs. {{ total_adquisiciones|floatformat:0|intcomma }}</div>
-        <div class="desc">Total Adquisiciones Ejecutadas</div>
-      </div>
-    </div> <!-- resumen-nros -->
+
     <div class="graficos">
+      <canvas id="torta" width="400" height="400" style="width: 400px; height: 400px;"></canvas>
       <div class="w-100 d-flex justify-content-center ver-mas">
         <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver más insumos adquiridos</a>
       </div>

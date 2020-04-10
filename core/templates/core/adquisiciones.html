@@ -147,7 +147,7 @@
             <td>{{ adquisicion.proveedor }}</td>
             <td>{{ adquisicion.tipo_comprobante }}</td>
             <td>{{ adquisicion.nro_comprobante }}</td>
-            <td class="text-nowrap">{{ adquisicion.timbrado }}</td>
+            <td class="text-nowrap">{{ adquisicion.nro_timbrado }}</td>
             <td>{{ adquisicion.nro_cheque }}</td>
             <td class="text-right text-nowrap">{{ adquisicion.monto_pyg|floatformat:0|intcomma }}</td>
             <td class="text-nowrap"><a href="{% url 'core:detalle-adquisiciones' adquisicion.id %}">Ver detalle</a></td>
@@ -156,9 +156,14 @@
         </tbody>
       </table>
     </div> <!-- table-responsive -->
-    {% if is_paginated %}
-      {% include 'core/partials/paginator.html' %}
-    {% endif %}
+    <div class="d-flex align-items-center justify-content-center mt-3 mb-4">
+      {% if is_paginated %}
+        {% include 'core/partials/paginator.html' %}
+      {% endif %}
+      <div class="ml-auto">
+        {% include 'core/partials/dropdown.html' with text='Descargar' excel='core:adquisiciones-excel' json='core:adquisiciones-json' %}
+      </div>
+    </div>
   </div>
 {% endblock %}
 

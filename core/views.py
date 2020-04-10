@@ -7,6 +7,7 @@ from django.views.generic import TemplateView, ListView, DetailView
 from rest_framework.generics import ListAPIView
 
 from core.forms import DonacionesForm, AdquisicionesForm
+from core.graph_utils import total_por_concepto
 from core.models import Donacion, Compra, ItemCompra
 from core.serializers import DonacionSerializer, CompraSerializer
 
@@ -28,13 +29,16 @@ class HomeView(TemplateView):
         context['total_donaciones'] = Donacion.objects.aggregate(total=Sum('monto_pyg'))['total']
         adquisiciones = Compra.objects.annotate(total_compra=Sum('items__precio_total_pyg'))
         context['total_adquisiciones'] = adquisiciones.aggregate(total=Sum('total_compra'))['total']
+        conceptos = total_por_concepto()
+        context['labels'] = [el for el in conceptos.keys()]
+        context['data'] = ['%.0f' % el for el in conceptos.values()]
         return context
 
 
 class DonacionesView(ListView):
     template_name = 'core/donaciones.html'
     model = Donacion
-    paginate_by = 10
+    paginate_by = 1
     internal_filters = {
         'donante': 'donante__nombre__icontains',
         'fecha_desde': 'fecha__gte',

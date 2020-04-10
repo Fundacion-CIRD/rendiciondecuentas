@@ -58,7 +58,7 @@ class CompraSerializer(serializers.ModelSerializer):
     class Meta:
         model = Compra
         fields = (
-            'id', 'fecha', 'proveedor', 'tipo_comprobante', 'nro_timbrado', 'nro_comprobante', 'nro_orden_pago',
+            'id', 'fecha', 'proveedor', 'tipo_comprobante', 'nro_timbrado', 'nro_comprobante', 'nro_cheque',
             'items')
 
     def get_proveedor(self, obj):
