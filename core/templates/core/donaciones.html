@@ -14,7 +14,13 @@
 {% block content %}
   {% include 'core/partials/navbar.html' %}
   <div class="container">
-    <h2>Donaciones Recibidas</h2>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'core:index' %}">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Donaciones</li>
+      </ol>
+    </nav>
+    <h2 class="mt-0">Donaciones Recibidas</h2>
     <div class="row">
       <div class="col-md-6">
         <p>En esta sección podés acceder datos de las donaciones recibidas tales como fecha, nombre, N° de comprobante

@@ -200,8 +200,8 @@ class Compra(models.Model):
 
     class Meta:
         ordering = ('-fecha',)
-        verbose_name = 'Adquisición Realizada/Destino'
-        verbose_name_plural = 'Adquisiciones Realizadas/Destinos'
+        verbose_name = 'Adquisición Realizada'
+        verbose_name_plural = 'Adquisiciones Realizadas'
 
     def __str__(self):
         return '{} - {}'.format(self.fecha, self.proveedor)
@@ -216,3 +216,30 @@ class Compra(models.Model):
         for item in self.items.all():
             suma += item.precio_total_pyg
         return suma
+
+
+class Entrega(models.Model):
+    fecha = models.DateField(verbose_name='Fecha')
+    entidad = models.ForeignKey(Entidad, on_delete=models.PROTECT, related_name='+', verbose_name='Entidad Beneficiada')
+
+    class Meta:
+        verbose_name = 'Entrega'
+        verbose_name_plural = 'Entregas'
+
+    def __str__(self):
+        return '{}({})'.format(self.entidad.nombre, self.fecha)
+
+
+class ItemEntrega(models.Model):
+    entrega = models.ForeignKey(
+        Entrega, on_delete=models.CASCADE, related_name='items_entregados', verbose_name='Entrega')
+    concepto = models.ForeignKey(Concepto, on_delete=models.PROTECT, related_name='+', verbose_name='Concepto')
+    cantidad = models.FloatField(verbose_name='Cantidad')
+    recibido_por = models.CharField(max_length=250, verbose_name='Recibido por')
+
+    class Meta:
+        verbose_name = 'Item Entregado'
+        verbose_name_plural = 'Items Entregados'
+
+    def __str__(self):
+        return '{}: {}'.format(self.concepto, self.cantidad)

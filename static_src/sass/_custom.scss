@@ -297,6 +297,9 @@ hr {
       border-color: #C1C1C1;
       box-shadow: none !important;
     }
+    &.dropdown-toggle:focus {
+      color: white !important;
+    }
   }
   &-action {
     background-color: theme-color('blue-1') !important;
@@ -332,6 +335,7 @@ hr {
 
 .dropdown-menu {
   margin-top: 8px;
+  margin-bottom: 8px;
   width: 140px;
   border: 2px solid #C1C1C1;
   border-radius: 20px;
@@ -557,6 +561,13 @@ hr {
       height: 64px;
     }
   }
+}
+
+.breadcrumb {
+  background-color: white;
+  font-size: 0.777rem;
+  margin-bottom: 0;
+  padding: 1rem 0;
 }
 
 

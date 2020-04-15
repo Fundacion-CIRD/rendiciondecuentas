@@ -1,7 +1,12 @@
+import os
+import uuid
+
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.text import slugify
+
 from .constants import MONEDA_CHOICES, USD
 
 
@@ -67,8 +72,15 @@ class UnidadMedida(models.Model):
             raise ValidationError('Debe seleccionar una unidad de medida elemental.')
 
 
+def get_upload_path(instance, filename):
+    galeria_slug = '{}-{}'.format(slugify(instance.galeria.nombre), instance.galeria.id)
+    extension = filename.split('.')[-1]
+    new_filename = '{}.{}'.format(uuid.uuid4(), extension)
+    return os.path.join(galeria_slug, new_filename)
+
+
 class Foto(models.Model):
-    archivo = models.ImageField(verbose_name='Imagen')
+    archivo = models.ImageField(upload_to=get_upload_path, verbose_name='Imagen')
     descripcion = models.CharField(max_length=250, verbose_name='Descripción')
     galeria = models.ForeignKey('Galeria', on_delete=models.PROTECT, verbose_name='Galería')
     created_at = models.DateTimeField(auto_now_add=True)

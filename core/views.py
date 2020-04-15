@@ -1,3 +1,4 @@
+from datetime import datetime
 from io import BytesIO
 
 import xlsxwriter
@@ -108,7 +109,7 @@ def descargar_donaciones(request):
         qs = filter_query(form, qs, internal_filters)
     buffer = BytesIO()
     workbook = xlsxwriter.Workbook(buffer)
-    worksheet = workbook.add_worksheet()
+    worksheet = workbook.add_worksheet(name='Donaciones')
     cabecera = ('ID', 'Fecha', 'Donante', 'Nro. Comprobante', 'Nro. Recibo', 'Monto')
     row, col = (0, 0)
     for el in cabecera:
@@ -190,7 +191,7 @@ def descargar_adquisiciones(request):
     items = ItemCompra.objects.filter(compra__in=adquisiciones)
     buffer = BytesIO()
     workbook = xlsxwriter.Workbook(buffer)
-    worksheet = workbook.add_worksheet()
+    worksheet = workbook.add_worksheet('Adquisiciones')
     cabecera_adquisiciones = (
         'ID', 'Fecha', 'Proveedor', 'Tipo de Comprobante', 'Nro. de Comprobante', 'Nro. de Timbrado', 'Nro. de Cheque',
         'Total Adquisición')
@@ -200,17 +201,18 @@ def descargar_adquisiciones(request):
         worksheet.write(row, col, el)
         col += 1
     row = 1
+    date_format = workbook.add_format({'num_format': 'yyyy-mm-dd'})
     for adquisicion in adquisiciones:
         worksheet.write(row, 0, adquisicion.id)
-        worksheet.write(row, 1, str(adquisicion.fecha))
+        worksheet.write_datetime(row, 1, adquisicion.fecha, date_format)
         worksheet.write(row, 2, str(adquisicion.proveedor))
-        worksheet.write(row, 4, str(adquisicion.tipo_comprobante))
-        worksheet.write(row, 5, adquisicion.nro_comprobante)
-        worksheet.write(row, 6, adquisicion.nro_timbrado)
-        worksheet.write(row, 7, adquisicion.nro_cheque)
-        worksheet.write(row, 6, '%.0f' % adquisicion.monto_pyg)
+        worksheet.write(row, 3, str(adquisicion.tipo_comprobante))
+        worksheet.write(row, 4, adquisicion.nro_comprobante)
+        worksheet.write(row, 5, adquisicion.nro_timbrado)
+        worksheet.write(row, 6, adquisicion.nro_cheque)
+        worksheet.write_number(row, 7, int('%.0f' % adquisicion.monto_pyg))
         row += 1
-    worksheet = workbook.add_worksheet()
+    worksheet = workbook.add_worksheet('Items Adquiridos')
     row, col = (0, 0)
     for el in cabecera_items:
         worksheet.write(row, col, el)
@@ -221,8 +223,9 @@ def descargar_adquisiciones(request):
         worksheet.write(row, 1, item.compra.id)
         worksheet.write(row, 2, str(item.concepto))
         worksheet.write(row, 3, item.cantidad)
-        worksheet.write(row, 4, '%.0f' % item.precio_unitario_pyg)
-        worksheet.write(row, 5, '%.0f' % item.precio_total_pyg)
+        worksheet.write_number(row, 4, int('%.0f' % item.precio_unitario_pyg))
+        worksheet.write_number(row, 5, int('%.0f' % item.precio_total_pyg))
+        row += 1
     workbook.close()
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='adquisiciones.xlsx')

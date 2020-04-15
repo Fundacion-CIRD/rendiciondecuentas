@@ -13,7 +13,13 @@
 {% block content %}
   {% include 'core/partials/navbar.html' %}
   <div class="container">
-    <h2>Adquisiciones Realizadas</h2>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'core:index' %}">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Adquisiciones</li>
+      </ol>
+    </nav>
+    <h2 class="mt-0">Adquisiciones Realizadas</h2>
     <div class="row">
       <div class="col-md-6">
         <p>En esta sección podés acceder datos de las adquisiciones realizadas tales como fecha, proveedor, tipo de
@@ -130,8 +136,6 @@
           </th>
           <th scope="col">Tipo de Comprobante</th>
           <th scope="col">Comprobante Nro.</th>
-          <th class="text-nowrap" scope="col">Timbrado Nro.</th>
-          <th class="text-nowrap" scope="col">Cheque Nro.</th>
           <th class="text-nowrap" scope="col">
             <div class="d-flex justify-content-between">
               <span class="mr-1">Monto Gs.</span>
@@ -152,7 +156,7 @@
               </div>
             </div>
           </th>
-          <th>Acciones</th>
+          <th class="text-center">Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -162,10 +166,10 @@
             <td>{{ adquisicion.proveedor }}</td>
             <td>{{ adquisicion.tipo_comprobante }}</td>
             <td>{{ adquisicion.nro_comprobante }}</td>
-            <td class="text-nowrap">{{ adquisicion.nro_timbrado }}</td>
-            <td>{{ adquisicion.nro_cheque }}</td>
             <td class="text-right text-nowrap">{{ adquisicion.monto_pyg|floatformat:0|intcomma }}</td>
-            <td class="text-nowrap"><a href="{% url 'core:detalle-adquisiciones' adquisicion.id %}">Ver detalle</a></td>
+            <td class="text-nowrap text-center">
+              <a href="{% url 'core:detalle-adquisiciones' adquisicion.id %}">Ver detalle</a>
+            </td>
           </tr>
         {% endfor %}
         </tbody>

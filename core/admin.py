@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from utils.admin import DocumentoInline
-from .models import Entidad, Cuenta, Donacion, Compra, Concepto, TipoCuenta, ItemCompra, TipoComprobante
+from .models import Entidad, Cuenta, Donacion, Compra, Concepto, TipoCuenta, ItemCompra, TipoComprobante, ItemEntrega, \
+    Entrega
 
 
 class EntidadAdmin(admin.ModelAdmin):
@@ -68,6 +69,18 @@ class CompraAdmin(admin.ModelAdmin):
     precio_total.short_description = 'Precio Total'
 
 
+class ItemEntregaInline(admin.TabularInline):
+    model = ItemEntrega
+    min_num = 1
+    extra = 0
+
+
+class EntregaAdmin(admin.ModelAdmin):
+    list_display = ('fecha', 'entidad')
+    list_filter = ('entidad',)
+    inlines = [ItemEntregaInline, DocumentoInline]
+
+
 admin.site.register(Entidad, EntidadAdmin)
 admin.site.register(TipoComprobante, TipoComprobanteAdmin)
 admin.site.register(TipoCuenta)
@@ -75,3 +88,4 @@ admin.site.register(Cuenta, CuentaAdmin)
 admin.site.register(Concepto, ConceptoAdmin)
 admin.site.register(Donacion, DonacionAdmin)
 admin.site.register(Compra, CompraAdmin)
+admin.site.register(Entrega, EntregaAdmin)

@@ -13,7 +13,14 @@
 {% block content %}
   {% include 'core/partials/navbar.html' %}
   <div class="container">
-    <h2>Detalle de Adquisición</h2>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'core:index' %}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'core:adquisiciones' %}">Adquisiciones</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Detalle</li>
+      </ol>
+    </nav>
+    <h2 class="mt-0">Detalle de Adquisición</h2>
     <div class="cabecera">
       <table>
         <tr>
@@ -46,7 +53,7 @@
         </tr>
       </table>
     </div>
-    <h4 class="mt-4 font-weight-light">Ítems adquiridos</h4>
+    <h4 class="mt-4 font-weight-light">Items adquiridos</h4>
     <table class="table table-responsive-md tabla">
       <thead>
         <tr>
