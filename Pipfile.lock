@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "972e72327282d63f35b39ccd1824610fb2bb1c20bf022ad783fab8ddb3930fce"
+            "sha256": "dba528351dbc066041871425b6a3a777ccd774f409b5e49cc393e8c185a9fff9"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -52,6 +52,13 @@
             "index": "pypi",
             "version": "==0.1.6"
         },
+        "django-appconf": {
+            "hashes": [
+                "sha256:1b1d0e1069c843ebe8ae5aa48ec52403b1440402b320c3e3a206a0907e97bb06",
+                "sha256:be58deb54a43d77d2e1621fe59f787681376d3cd0b8bd8e4758ef6c3a6453380"
+            ],
+            "version": "==1.0.4"
+        },
         "django-baton": {
             "hashes": [
                 "sha256:0def8aa6e2437c6514bb16493bf570769720c2bb36fc1c1bd69fbbbf29396278",
@@ -59,6 +66,14 @@
             ],
             "index": "pypi",
             "version": "==1.5.8"
+        },
+        "django-imagekit": {
+            "hashes": [
+                "sha256:304c3379f6a5cac387e47ace11195a603ad3cb01e3e951b45489824d25b00359",
+                "sha256:6ec0afb77cdf52cd453c9fc2c10ef350d111edfd6ce53c5977aa8a0e22cee00c"
+            ],
+            "index": "pypi",
+            "version": "==4.0.2"
         },
         "django-postgres-unaccent": {
             "git": "https://github.com/angoybu/django-postgres-unaccent.git",
@@ -75,11 +90,11 @@
         },
         "google-api-core": {
             "hashes": [
-                "sha256:859f7392676761f2b160c6ee030c3422135ada4458f0948c5690a6a7c8d86294",
-                "sha256:92e962a087f1c4b8d1c5c88ade1c1dfd550047dcffb320c57ef6a534a20403e2"
+                "sha256:c0e430658ed6be902d7ba7095fb0a9cac810270d71bf7ac4484e76c300407aae",
+                "sha256:e4082a0b479dc2dee2f8d7b80ea8b5d0184885b773caab15ab1836277a01d689"
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-            "version": "==1.16.0"
+            "version": "==1.17.0"
         },
         "google-api-python-client": {
             "hashes": [
@@ -91,11 +106,11 @@
         },
         "google-auth": {
             "hashes": [
-                "sha256:a5ee4c40fef77ea756cf2f1c0adcf475ecb53af6700cf9c133354cdc9b267148",
-                "sha256:cab6c707e6ee20e567e348168a5c69dc6480384f777a9e5159f4299ad177dcc0"
+                "sha256:050f1713142fa57d4b34f4fd4a998210e330f6a29c84c6ce359b928cc11dc8ad",
+                "sha256:9813eaae335c45e8a1b5d274610fa961ac8aa650568d1cfb005b2c07da6bde6c"
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-            "version": "==1.13.1"
+            "version": "==1.14.0"
         },
         "google-auth-httplib2": {
             "hashes": [
@@ -120,10 +135,10 @@
         },
         "httplib2": {
             "hashes": [
-                "sha256:4e26d60a6b37ff0e8401e976f13667cb3746dfa1b50833003b7f138042b54247",
-                "sha256:b81b2cd2248285168a4359f2acf24521a4099b5853e790309c45dcb90ee4b3c6"
+                "sha256:396ef66a170f76d5b2103f6c474da8aa3ff0c3c34c546323885e9de7e9eb08cd",
+                "sha256:eb7a6b137ae31e61c5f429083c5bebb71fe5fd1958e7f3d5c39b21b11cd4b290"
             ],
-            "version": "==0.17.1"
+            "version": "==0.17.2"
         },
         "idna": {
             "hashes": [
@@ -138,6 +153,12 @@
                 "sha256:937dc5b1c9c7e9d41daf78b38a3f70e1be83bb31871afed2470a98544edfcf62"
             ],
             "version": "==1.5.2"
+        },
+        "pilkit": {
+            "hashes": [
+                "sha256:ddb30c2f0198a147e56b151476c3bb9fe045fbfd5b0a0fa2a3148dba62d1559f"
+            ],
+            "version": "==2.0"
         },
         "pillow": {
             "hashes": [

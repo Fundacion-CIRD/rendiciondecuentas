@@ -11,6 +11,7 @@ from core.forms import DonacionesForm, AdquisicionesForm
 from core.graph_utils import total_por_concepto
 from core.models import Donacion, Compra, ItemCompra
 from core.serializers import DonacionSerializer, CompraSerializer
+from utils.models import Galeria
 
 
 def filter_query(form, qs, internal_filters):
@@ -250,3 +251,14 @@ class DonacionAPIView(ListAPIView):
 class CompraAPIView(ListAPIView):
     serializer_class = CompraSerializer
     queryset = Compra.objects.all()
+
+
+class GaleriaView(TemplateView):
+    template_name = 'core/gallery.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        galeria = Galeria.objects.get(pk=1)
+        context['fotos'] = galeria.foto_set.all()
+        return context
+

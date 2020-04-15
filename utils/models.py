@@ -6,6 +6,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 
 from .constants import MONEDA_CHOICES, USD
 
@@ -81,6 +83,8 @@ def get_upload_path(instance, filename):
 
 class Foto(models.Model):
     archivo = models.ImageField(upload_to=get_upload_path, verbose_name='Imagen')
+    thumbnail = ImageSpecField(
+        source='archivo', processors=[ResizeToFill(500, 375)], format='JPEG', options={'quality': 60})
     descripcion = models.CharField(max_length=250, verbose_name='Descripción')
     galeria = models.ForeignKey('Galeria', on_delete=models.PROTECT, verbose_name='Galería')
     created_at = models.DateTimeField(auto_now_add=True)

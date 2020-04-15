@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block styles %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/ekko-lightbox.css' %}">
+{% endblock %}
+
+{% block title %}
+  Galería de fotos | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row galeria">
+      {% for foto in fotos %}
+        <a href="{{ foto.archivo.url }}" data-toggle="lightbox" data-gallery="example-gallery" data-footer="{{ foto.descripcion }}" class="col-12 col-sm-6 col-lg-4 my-2 position-relative">
+          <img src="{{ foto.thumbnail.url }}" class="img-fluid">
+          <p class="text-white">This is some text</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/ekko-lightbox.min.js' %}"></script>
+  <script>
+    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+                event.preventDefault();
+                $(this).ekkoLightbox();
+            });
+  </script>
+{% endblock %}
