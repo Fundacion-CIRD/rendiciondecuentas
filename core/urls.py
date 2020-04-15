@@ -1,10 +1,11 @@
 from django.urls import path
 
 from core.views import HomeView, DonacionesView, DonacionAPIView, CompraAPIView, AdquisicionesView, \
-    DetalleAdquisicionView, descargar_donaciones, descargar_adquisiciones
+    DetalleAdquisicionView, descargar_donaciones, descargar_adquisiciones, AntecedentesView
 
 urlpatterns = [
     path('', HomeView.as_view(), name='index'),
+    path('antecedentes', AntecedentesView.as_view(), name='antecedentes'),
     path('donaciones', DonacionesView.as_view(), name='donaciones'),
     path('donaciones/json', DonacionAPIView.as_view(), name='donaciones-json'),
     path('donaciones/descargar', descargar_donaciones, name='donaciones-excel'),

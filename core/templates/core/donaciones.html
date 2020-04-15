@@ -14,11 +14,29 @@
 {% block content %}
   {% include 'core/partials/navbar.html' %}
   <div class="container">
+    <h2>Donaciones Recibidas</h2>
     <div class="row">
-      <div class="col-md-8">
-        <h2>Donaciones Recibidas</h2>
+      <div class="col-md-6">
+        <p>En esta sección podés acceder datos de las donaciones recibidas tales como fecha, nombre, N° de comprobante
+          del depósito, N° de recibo y el monto. A la derecha de la pantalla vas a ver el monto total de las donaciones
+          recibidas y además tenés la opción de filtrar los datos y descargar esa selección o completamente el data set
+          en Excel o JSON.</p>
       </div>
-      <div class="col-md-4 mt-2 mt-md-0 d-flex align-items-md-end justify-content-md-end" style="margin-bottom: 24px">
+      <div class="col-md-6">
+        <div class="d-flex align-items-center justify-content-center flex-column my-4 resumen-nros">
+          <div class="monto">Gs. {{ total_donaciones|floatformat:0|intcomma }}</div>
+          <div class="desc mb-4">Total Donaciones Recibidas</div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-8 order-1 order-md-0 mt-2 mb-3 my-md-0">
+        <div class="h-100 d-flex justify-content-center justify-content-md-start align-items-end">
+          <small>Total de items encontrados: {{ donacion_list.count }}</small>
+        </div>
+      </div>
+      <div
+        class="col-md-4 mt-2 mt-md-0 d-flex align-items-md-end justify-content-center justify-content-md-end order-0 order-md-1">
         <button type="button" data-toggle="collapse" data-target="#filtros" class="btn btn-secondary" id="filtrosBtn">
           <span class="w-100 d-flex align-items-center justify-content-between">
             <span>Filtros</span>
@@ -67,9 +85,6 @@
         </form>
       </div>
     </div>
-    <div class="mt-2">
-      <small>Total de items encontrados: {{ donacion_list.count }}</small>
-    </div>
     <div class="table-responsive tabla">
       <table class="table table-hover">
         <thead>
@@ -110,7 +125,7 @@
               {% endif %}
             </div>
           </th>
-{#          <th scope="col">Cuenta Nro.</th>#}
+          {#          <th scope="col">Cuenta Nro.</th>#}
           <th scope="col">Comprobante Nro.</th>
           <th class="text-nowrap" scope="col">Recibo Nro.</th>
           <th scope="col">
@@ -142,7 +157,7 @@
             {% else %}
               <td>{{ donacion.donante }}</td>
             {% endif %}
-{#            <td>{{ donacion.cuenta }}</td>#}
+            {#            <td>{{ donacion.cuenta }}</td>#}
             <td class="text-nowrap">{{ donacion.nro_comprobante }}</td>
             {% if donacion.recibo_nro %}
               <td>{{ donacion.recibo_nro|intcomma }}</td>
@@ -155,18 +170,29 @@
         </tbody>
       </table>
     </div> <!-- table-responsive -->
-    <div class="mt-3 mb-4 w-100">
-      <div class="float-right">
-        {% include 'core/partials/dropdown.html' with text='Descargar' excel='core:donaciones-excel' json='core:donaciones-json' %}
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <small>
+          *Esta información queda íntegramente en los registros de la Fundación CIRD, expresamente a pedido de la
+          persona donante pero al mismo tiempo accesible a todos los Organismos del Estado para su debido control como
+          se menciona según Decreto Presidencia N° 3.506/20.
+        </small>
       </div>
-      {% if is_paginated %}
-        <div class="w-100 mx-auto">
-          <div class="text-center">
-            {% include 'core/partials/paginator.html' %}
+      <div class="col-md-6">
+        {% if is_paginated %}
+          <div class="w-100 mx-auto">
+            <div class="text-center">
+              {% include 'core/partials/paginator.html' %}
+            </div>
           </div>
+        {% endif %}
+      </div>
+      <div class="col-md-3">
+        <div class="d-flex align-items-start justify-content-end">
+          {% include 'core/partials/dropdown.html' with text='Descargar' excel='core:donaciones-excel' json='core:donaciones-json' %}
         </div>
-      {% endif %}
-    </div> <!-- actions -->
+      </div>
+    </div>
   </div>
 {% endblock %}
 
@@ -184,14 +210,14 @@
       });
   </script>
   <script>
-    let showFiltros = false;
-    $('#filtrosBtn').click(function(event) {
-        showFiltros = ! showFiltros;
-        if (showFiltros) {
-            $('#filtrosArrow').addClass('icon-chevron-up').removeClass('icon-chevron-down');
-        } else {
-            $('#filtrosArrow').addClass('icon-chevron-down').removeClass('icon-chevron-up');
-        }
-    })
+      let showFiltros = false;
+      $('#filtrosBtn').click(function (event) {
+          showFiltros = !showFiltros;
+          if (showFiltros) {
+              $('#filtrosArrow').addClass('icon-chevron-up').removeClass('icon-chevron-down');
+          } else {
+              $('#filtrosArrow').addClass('icon-chevron-down').removeClass('icon-chevron-up');
+          }
+      })
   </script>
 {% endblock %}

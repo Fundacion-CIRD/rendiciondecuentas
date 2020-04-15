@@ -201,11 +201,17 @@ nav.navbar {
 }
 
 h2 {
+  font-size: 2rem;
+  line-height: 2.7rem;
   margin-top: 3rem;
   margin-bottom: 1.333rem;
-  font-size: 26px;
   font-weight: 300;
-  line-height: 32px;
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1.8rem;
 }
 
 hr {
@@ -354,9 +360,6 @@ hr {
 }
 
 .logo{
-  &-civilab {
-    height: 25px;
-  }
   &-naranja {
     height: 64px;
   }
@@ -365,14 +368,18 @@ hr {
   }
 }
 
-.logos-apoyo a {
-  margin-right: 24px;
-  &:last-child {
-    margin-right: 0;
+.logos-apoyo {
+  a {
+    &:hover {
+      text-decoration: none;
+    }
   }
-  &:hover {
-    text-decoration: none;
-  }
+}
+
+.vertical-divider {
+  width: 0;
+  border: 1px solid #D2D2D2;
+  margin: 0 1.5rem;
 }
 
 .ver-mas {
@@ -465,55 +472,6 @@ hr {
   background-color: theme-color('blue-1') !important;
 }
 
-@media (min-width: map_get($grid-breakpoints, 'sm')) {
-  html, body {
-    font-size: 18px;
-
-  }
-  .banner .container {
-    .hashtag {
-      font-size: 1.667rem;
-    }
-    h1 {
-      padding: 5px;
-      font-size: 2.4rem;
-      line-height: 4rem;
-    }
-  }
-  h2 {
-    font-size: 2rem;
-    line-height: 2.7rem;
-  }
-
-  .resumen-nros .monto {
-    color: $orange;
-    line-height: 3rem;
-    font-size: 2.4rem;
-    font-weight: 500;
-  }
-
-  .desc {
-    font-size: 1.333rem;
-    line-height: 1.6rem;
-  }
-
-  .logo{
-    &-civilab {
-      height: 37px;
-    }
-    &-naranja {
-      height: 70px;
-    }
-    &-gob-abierto {
-      height: 64px;
-    }
-  }
-
-  .logos-apoyo a {
-    margin-right: 36px;
-  }
-}
-
 .navbar-toggler {
   border: none;
   padding: 0 5px;
@@ -554,6 +512,54 @@ hr {
   padding-bottom: 10px;
 }
 
+@media (min-width: map_get($grid-breakpoints, 'sm')) {
+  html, body {
+    font-size: 18px;
+  }
+  h2 {
+    font-size: 2.222rem;
+    line-height: 2.72rem;
+  }
+  h3 {
+    font-size: 1.666rem;
+    font-weight: 300;
+    line-height: 2.05rem;
+  }
+  .banner .container {
+    .hashtag {
+      font-size: 1.667rem;
+    }
+    h1 {
+      padding: 5px;
+      font-size: 2.4rem;
+      line-height: 4rem;
+    }
+  }
+
+
+  .resumen-nros .monto {
+    color: $orange;
+    line-height: 3rem;
+    font-size: 2.4rem;
+    font-weight: 500;
+  }
+
+  .desc {
+    font-size: 1.333rem;
+    line-height: 1.6rem;
+  }
+
+  .logo{
+    &-naranja {
+      height: 70px;
+    }
+    &-gob-abierto {
+      height: 64px;
+    }
+  }
+}
+
+
 @media (min-width: map_get($grid-breakpoints, 'md')) {
   .py-logos {
     height: 120px;
@@ -561,6 +567,9 @@ hr {
     .mspbs { max-height: 70px; }
     .py-gente { max-height: 56px; }
     .cird { max-height: 53px; }
+  }
+  .vertical-divider {
+    margin: 0 2.5rem;
   }
 }
 

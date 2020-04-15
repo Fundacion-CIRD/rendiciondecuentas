@@ -5,7 +5,8 @@
 {% block content %}
   {% include 'core/partials/navbar.html' with display='none' fixed=True %}
   <div id="banner" class="banner">
-    <div class="container d-flex flex-column pt-4 pt-lg-0 align-items-center justify-content-lg-top justify-content-lg-center">
+    <div
+      class="container d-flex flex-column pt-4 pt-lg-0 align-items-center justify-content-lg-top justify-content-lg-center">
       <div class="row">
         <div class="col-lg-8">
           <span class="hashtag">#QuedateEnCasa</span>
@@ -19,9 +20,9 @@
           </div>
         </div>
         <div class="col-lg-4 nav flex-column align-items-lg-end align-items-center justify-content-center mt-4 mt-lg-0">
-          <a class="text-center" href="#resumen">Resumen</a>
+          <a class="text-center" href="{% url 'core:antecedentes' %}">Antecedentes</a>
           <a class="text-center" href="{% url 'core:donaciones' %}">Donaciones Recibidas</a>
-          <a class="text-center" href="{% url 'core:adquisiciones' %}">Adquisiciones Ejecutadas</a>
+          <a class="text-center" href="{% url 'core:adquisiciones' %}">Adquisiciones Realizadas</a>
         </div>
       </div>
       <div class="datos-abiertos d-lg-none">
@@ -41,98 +42,89 @@
       </div>
       <div class="col-md-6 mt-4 mt-md-0">
         <div class="monto">Gs. {{ total_adquisiciones|floatformat:0|intcomma }}</div>
-        <div class="desc mb-4">Total Adquisiciones Ejecutadas</div>
+        <div class="desc mb-4">Total Adquisiciones Realizadas</div>
         <div class="d-flex align-items-center justify-content-center">
           <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver Adquisiciones</a>
         </div>
+      </div>
+      <div class="col-md-12 mt-5">
+        <div class="monto">Gs. {{ saldo|floatformat:0|intcomma }}</div>
+        <div class="desc mb-4">Saldo de Donaciones</div>
       </div>
     </div> <!-- resumen-nros -->
     <hr>
     <div class="intro">
       <h2>Rendición de Donaciones COVID-19</h2>
-      <div class="d-block d-md-none">
-        <p>
-          En el sistema de rendición de cuentas de donaciones recibidas para la lucha contra el COVID-19 podés acceder y
-          descargar en formato abierto datos de las donaciones recibidas tales como fecha N° de depósito, nombres del
-          aportante, monto depositado, N° de recibo de donación y el tipo de cambio (ITAÚ).
-        </p>
-        <p>
-          También podés acceder a los datos de las adquisiciones realizadas como por ejemplo fecha, proveedor, tipo de
-          comprobante, N° de comprobante, N° de orden de pago, concepto, cantidad, precio por unidad, precio total,
-          institución beneficiada y documento firmado de las diferentes recepciones.
-        </p>
-        <p>
-          <strong>La Fundación CIRD</strong>, es una organización privada, sin fines de lucro, con 30 años de
-          experiencia en gerencia proyectos de desarrollo en el Paraguay. Como resultado de esta experiencia ha diseñado
-          un modelo para contextos complejos y difíciles basado en uno de los componentes esenciales de la Misión de la
-          Fundación que es la formación de Capital Humano y Social.
-        </p>
-      </div>
-      <div class="row d-none d-md-flex">
-        <div class="col-md-6">
+      <div class="row">
+        <div class="col-lg-6">
           <p>
-            En el sistema de rendición de cuentas de donaciones recibidas para la lucha contra el COVID-19 podés acceder
-            y descargar en formato abierto datos de las donaciones recibidas tales como fecha N° de depósito, nombres
-            del aportante, monto depositado, N° de recibo de donación y el tipo de cambio (ITAÚ).
+            En el contexto de la emergencia sanitaria declarada por Decreto Nº 3456 del 16/03/2020 por el riesgo de
+            expansión del COVID19, el Ministerio de Salud Pública y Bienestar Social (MSPBS) solicitó a la Fundación
+            Centro de Información y Recursos para el Desarrollo (CIRD), establecer un mecanismo para canalizar recursos
+            financieros provenientes de donaciones del sector privado, destinados a fortalecer la respuesta nacional a
+            la
+            emergencia.
           </p>
           <p>
-            También podés acceder a los datos de las adquisiciones realizadas como por ejemplo fecha, proveedor, tipo de
-            comprobante, N° de comprobante, N° de orden de pago, concepto,
+            Ésta web es una herramienta de rendición de cuentas de donaciones recibidas y adquisiciones realizadas sobre
+            los insumos y/o servicios, podés acceder, filtrar y descargar en formato abierto todos los datos.
           </p>
         </div>
-        <div class="col-md-6">
-          <p>
-            cantidad, precio por unidad, precio total, institución beneficiada y documento firmado de las diferentes
-            recepciones.
-          </p>
-          <p>
-            <strong>La Fundación CIRD</strong>, es una organización privada, sin fines de lucro, con 30 años de
-            experiencia en gerencia proyectos de desarrollo en el Paraguay. Como resultado de esta experiencia ha
-            diseñado un modelo para contextos complejos y difíciles basado en uno de los componentes esenciales de la
-            Misión de la Fundación que es la formación de Capital Humano y Social.
-          </p>
-        </div>
+        <div class="col-lg-6"></div>
       </div>
-      <div id="resumen"></div>
     </div> <!-- intro -->
-    <hr>
-
-    <div class="graficos">
-      <canvas id="torta" width="400" height="400" style="width: 400px; height: 400px;"></canvas>
-      <div class="w-100 d-flex justify-content-center ver-mas">
-        <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver más insumos adquiridos</a>
+    <div class="fundacion-cird my-4">
+      <div class="row">
+        <div class="col-lg-6 order-1 order-lg-0 mt-3 mt-lg-0">
+          <div class="pr-md-4 pr-0">
+            <img src="{% static 'img/foto cird.jpg' %}" alt="Fundación CIRD" class="img-fluid">
+          </div>
+        </div>
+        <div class="col-lg-6 order-0 order-lg-1">
+          <h3>Fundación CIRD</h3>
+          <p>
+            La <strong>Fundación CIRD</strong>, es una organización privada, sin fines de lucro, con 30 años de experiencia
+            en gerencia de proyectos de desarrollo en el Paraguay. El CIRD está comprometida con el
+            fortalecimiento de las capacidades institucionales de organizaciones y comunidades para la
+            solución de problemas sociales complejos, que afectan a los sectores más pobres y excluidos
+            de la sociedad, buscando generar oportunidades y soluciones, gerenciales y organizacionales,
+            que sean específicas y eficaces para restituir la equidad y capital social en el Paraguay, como
+            herramienta para la incrementación del impacto y la sostenibilidad de los programas de
+            desarrollo, con especial énfasis en los Objetivos de Desarrollo Sostenible.
+          </p>
+          <div class="d-flex align-items-center justify-content-center mt-3 mt-md-4">
+            <a href="https://www.cird.org.py" class="btn btn-primary" target="_blank">Visitar el Sitio Web del CIRD</a>
+          </div>
+        </div>
       </div>
-    </div> <!-- graficos -->
+    </div>
+{#    <hr>#}
+{#    <div class="graficos">#}
+{#      <canvas id="torta" width="400" height="400" style="width: 400px; height: 400px;"></canvas>#}
+{#      <div class="w-100 d-flex justify-content-center ver-mas">#}
+{#        <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver más insumos adquiridos</a>#}
+{#      </div>#}
+{#    </div> <!-- graficos -->#}
   </div><!-- container -->
-  <div class="container d-block d-sm-none">
-    <h2>Galería</h2>
-    <div class="w-100">
-      <img src="https://picsum.photos/500" alt="Image" class="img-fluid">
-    </div>
-    <div class="w-100 d-flex justify-content-center ver-mas">
-      <a href="#" class="btn btn-primary">Ver más fotos</a>
-    </div>
-  </div>
-  <div class="galeria d-none d-sm-block">
-    <div class="d-flex justify-content-between">
-      <div class="foto position-relative" style="background-image: url('https://picsum.photos/500')">
-        <div class="position-absolute d-flex justify-content-center align-items-center p-5">
-          <p>El Gobierno entregó el primer lote de equipo e insumos de protección biológica al @msaludpy.</p>
-        </div>
-      </div>
-      <div class="foto position-relative" style="background-image: url('https://picsum.photos/500')">
-        <div class="position-absolute d-flex justify-content-center align-items-center p-5">
-          <p>El Gobierno entregó el primer lote de equipo e insumos de protección biológica al @msaludpy.</p>
-        </div>
-      </div>
-      <div class="foto position-relative" style="background-image: url('https://picsum.photos/500')">
-        <div class="position-absolute d-flex justify-content-center align-items-center p-5">
-          <p>El Gobierno entregó el primer lote de equipo e insumos de protección biológica al @msaludpy.</p>
-        </div>
-      </div>
-    </div>
-    <div class="w-100 d-flex justify-content-center ver-mas">
-      <a href="#" class="btn btn-primary">Ver más fotos</a>
-    </div>
-  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <script>
+      const data = {{ data| safe }};
+      const context = document.getElementById('torta').getContext('2d');
+      const myChart = new Chart(context, {
+          type: 'pie',
+          data: {
+              datasets: [
+                  {
+                      data: data,
+                      backgroundColor: ['#478FBC', '#14679B', '#0C578E', '#0C578E', '#012B4D'],
+                  }
+              ],
+              labels: {{ labels|safe }}
+          },
+      });
+  </script>
 {% endblock %}

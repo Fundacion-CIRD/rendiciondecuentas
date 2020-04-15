@@ -13,11 +13,29 @@
 {% block content %}
   {% include 'core/partials/navbar.html' %}
   <div class="container">
+    <h2>Adquisiciones Realizadas</h2>
     <div class="row">
-      <div class="col-md-8">
-        <h2>Adquisiciones Ejecutadas</h2>
+      <div class="col-md-6">
+        <p>En esta sección podés acceder datos de las adquisiciones realizadas tales como fecha, proveedor, tipo de
+          comprobante, N° de comprobante, N° de timbrado, N° de cheque, cantidad, concepto y cantidad. A la derecha de
+          la pantalla vas a ver el monto total de las adquisiciones realizadas y además tenés la opción de filtrar los
+          datos y descargar esa selección o completamente el data set en Excel o JSON.</p>
       </div>
-      <div class="col-md-4 mt-2 mt-md-0 d-flex align-items-md-end" style="margin-bottom: 24px">
+      <div class="col-md-6">
+        <div class="d-flex align-items-center justify-content-center flex-column my-4 resumen-nros">
+          <div class="monto">Gs. {{ total_adquisiciones|floatformat:0|intcomma }}</div>
+          <div class="desc mb-4">Total Adquisiciones Realizadas</div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-8 order-1 order-md-0 mt-2 mb-3 my-md-0">
+        <div class="h-100 d-flex justify-content-center justify-content-md-start align-items-end">
+          <small>Total de items encontrados: {{ compra_list.count }}</small>
+        </div>
+      </div>
+      <div
+        class="col-md-4 mt-2 mt-md-0 d-flex align-items-md-end justify-content-center justify-content-md-end order-0 order-md-1">
         <button type="button" data-toggle="collapse" data-target="#filtros" class="btn btn-secondary" id="filtrosBtn">
           <span class="w-100 d-flex align-items-center justify-content-between">
             <span>Filtros</span>
@@ -66,9 +84,6 @@
         </form>
       </div>
     </div> <!-- #filtros -->
-    <div class="mt-2">
-      <small>Total de items encontrados: {{ compra_list.count }}</small>
-    </div>
     <div class="table-responsive tabla">
       <table class="table table-hover">
         <thead>
@@ -181,14 +196,14 @@
       });
   </script>
   <script>
-    let showFiltros = false;
-    $('#filtrosBtn').click(function(event) {
-        showFiltros = ! showFiltros;
-        if (showFiltros) {
-            $('#filtrosArrow').addClass('icon-chevron-up').removeClass('icon-chevron-down');
-        } else {
-            $('#filtrosArrow').addClass('icon-chevron-down').removeClass('icon-chevron-up');
-        }
-    })
+      let showFiltros = false;
+      $('#filtrosBtn').click(function (event) {
+          showFiltros = !showFiltros;
+          if (showFiltros) {
+              $('#filtrosArrow').addClass('icon-chevron-up').removeClass('icon-chevron-down');
+          } else {
+              $('#filtrosArrow').addClass('icon-chevron-down').removeClass('icon-chevron-up');
+          }
+      })
   </script>
 {% endblock %}

@@ -26,13 +26,22 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # Calculos para el resumen
         context['total_donaciones'] = Donacion.objects.aggregate(total=Sum('monto_pyg'))['total']
         adquisiciones = Compra.objects.annotate(total_compra=Sum('items__precio_total_pyg'))
         context['total_adquisiciones'] = adquisiciones.aggregate(total=Sum('total_compra'))['total']
+        context['saldo'] = context['total_donaciones'] - context['total_adquisiciones']
+
+        # Calculos para el grafico
         conceptos = total_por_concepto()
         context['labels'] = [el for el in conceptos.keys()]
         context['data'] = ['%.0f' % el for el in conceptos.values()]
         return context
+
+
+class AntecedentesView(TemplateView):
+    template_name = 'core/antecedentes.html'
 
 
 class DonacionesView(ListView):
@@ -74,6 +83,7 @@ class DonacionesView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
+        context['total_donaciones'] = Donacion.objects.aggregate(total=Sum('monto_pyg'))['total']
         if context.get('is_paginated'):
             context['donaciones'] = context['page_obj']
         else:
@@ -158,6 +168,8 @@ class AdquisicionesView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
         context['adquisiciones'] = context['page_obj'] if context.get('is_paginated') else context['compra_list']
+        adquisiciones = Compra.objects.annotate(total_compra=Sum('items__precio_total_pyg'))
+        context['total_adquisiciones'] = adquisiciones.aggregate(total=Sum('total_compra'))['total']
         context['orden'] = self.request.GET.get('orden')
         return context
 
