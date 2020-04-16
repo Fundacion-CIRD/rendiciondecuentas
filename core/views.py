@@ -35,8 +35,8 @@ class HomeView(TemplateView):
         context['total_donaciones'] = Donacion.objects.aggregate(total=Sum('monto_pyg'))['total']
         adquisiciones = Compra.objects.annotate(total_compra=Sum('items__precio_total_pyg'))
         context['total_adquisiciones'] = adquisiciones.aggregate(total=Sum('total_compra'))['total']
-        context['saldo'] = context['total_donaciones'] - context['total_adquisiciones']
-
+        if context['total_donaciones'] and context['total_adquisiciones']:
+            context['saldo'] = context['total_donaciones'] - context['total_adquisiciones']
         # Calculos para el grafico
         conceptos = total_por_concepto()
         context['labels'] = [el for el in conceptos.keys()]
