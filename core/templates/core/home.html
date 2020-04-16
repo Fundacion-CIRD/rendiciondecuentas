@@ -70,7 +70,16 @@
             los insumos y/o servicios, podés acceder, filtrar y descargar en formato abierto todos los datos.
           </p>
         </div>
-        <div class="col-lg-6"></div>
+        <div class="col-lg-6">
+          <div class="position-relative todos-por-py">
+            <p class="position-absolute">
+              <a href="https://www.todosporparaguay.org/" target="_blank">Todos por Paraguay</a> es una campaña nacional que tiene el objetivo recaudar fondos para complementar los
+              esfuerzos del Estado en la lucha contra la pandemia COVID-19.
+            </p>
+            <img src="{% static 'img/todos_por_paraguay.png' %}" alt="Campaña Todos por Paraguay"
+                 class="img-fluid position-relative">
+          </div>
+        </div>
       </div>
     </div> <!-- intro -->
     <div class="fundacion-cird mt-4">
@@ -83,7 +92,8 @@
         <div class="col-lg-6 order-0 order-lg-1">
           <h3>Fundación CIRD</h3>
           <p>
-            La <strong>Fundación CIRD</strong>, es una organización privada, sin fines de lucro, con 30 años de experiencia
+            La <strong>Fundación CIRD</strong>, es una organización privada, sin fines de lucro, con 30 años de
+            experiencia
             en gerencia de proyectos de desarrollo en el Paraguay. El CIRD está comprometida con el
             fortalecimiento de las capacidades institucionales de organizaciones y comunidades para la
             solución de problemas sociales complejos, que afectan a los sectores más pobres y excluidos
@@ -98,13 +108,13 @@
         </div>
       </div>
     </div>
-{#    <hr>#}
-{#    <div class="graficos">#}
-{#      <canvas id="torta" width="400" height="400" style="width: 400px; height: 400px;"></canvas>#}
-{#      <div class="w-100 d-flex justify-content-center ver-mas">#}
-{#        <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver más insumos adquiridos</a>#}
-{#      </div>#}
-{#    </div> <!-- graficos -->#}
+    {#    <hr>#}
+    {#    <div class="graficos">#}
+    {#      <canvas id="torta" width="400" height="400" style="width: 400px; height: 400px;"></canvas>#}
+    {#      <div class="w-100 d-flex justify-content-center ver-mas">#}
+    {#        <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver más insumos adquiridos</a>#}
+    {#      </div>#}
+    {#    </div> <!-- graficos -->#}
   </div><!-- container -->
 {% endblock %}
 

@@ -4,7 +4,7 @@
     {% if page_obj.has_previous %}
       <li class="page-item">
         <a class="page-link"
-           href="{% url 'core:donaciones' %}?{% query_transform request page=page_obj.previous_page_number %}">
+           href="{% url ruta %}?{% query_transform request page=page_obj.previous_page_number %}">
           <i class="icon-chevron-left"></i>
         </a>
       </li>
@@ -12,7 +12,7 @@
 
     {% if page_obj.paginator.num_pages > 1 and page_obj.number >= 4 %}
       <li class="page-item"><a class="page-link"
-                               href="{% url 'core:donaciones' %}?{% query_transform request page=1 %}">1</a></li>
+                               href="{% url ruta%}?{% query_transform request page=1 %}">1</a></li>
       {% if page_obj.number >= 5 %}
         <li class="page-item"><span class="page-link">…</span></li>
       {% endif %}
@@ -22,14 +22,14 @@
       {% if page_obj.number > 2 %}
         <li class="page-item">
           <a class="page-link"
-             href="{% url 'core:donaciones' %}?{% query_transform request page=page_obj.number|add:'-2' %}">
+             href="{% url ruta %}?{% query_transform request page=page_obj.number|add:'-2' %}">
             {{ page_obj.number|add:'-2' }}
           </a>
         </li>
       {% endif %}
       <li class="page-item">
         <a class="page-link"
-           href="{% url 'core:donaciones' %}?{% query_transform request page=page_obj.number|add:'-1' %}">
+           href="{% url ruta %}?{% query_transform request page=page_obj.number|add:'-1' %}">
           {{ page_obj.number|add:'-1' }}
         </a>
       </li>
@@ -40,14 +40,14 @@
     {% if page_obj.number <= page_obj.paginator.num_pages|add:'-1' %}
       <li class="page-item">
         <a class="page-link"
-           href="{% url 'core:donaciones' %}?{% query_transform request page=page_obj.number|add:'1' %}">
+           href="{% url ruta %}?{% query_transform request page=page_obj.number|add:'1' %}">
           {{ page_obj.number|add:'1' }}
         </a>
       </li>
       {% if page_obj.number < page_obj.paginator.num_pages|add:'-1' %}
         <li class="page-item">
           <a class="page-link"
-             href="{% url 'core:donaciones' %}?{% query_transform request page=page_obj.number|add:'2' %}">
+             href="{% url ruta %}?{% query_transform request page=page_obj.number|add:'2' %}">
             {{ page_obj.number|add:'2' }}
           </a>
         </li>
@@ -60,7 +60,7 @@
       {% endif %}
       <li class="page-item">
         <a class="page-link"
-           href="{% url 'core:donaciones' %}?{% query_transform request page=page_obj.paginator.num_pages %}">
+           href="{% url ruta %}?{% query_transform request page=page_obj.paginator.num_pages %}">
           {{ page_obj.paginator.num_pages }}
         </a>
       </li>
@@ -69,7 +69,7 @@
     {% if page_obj.has_next %}
       <li class="page-item">
         <a class="page-link"
-           href="{% url 'core:donaciones' %}?{% query_transform request page=page_obj.next_page_number %}">
+           href="{% url ruta %}?{% query_transform request page=page_obj.next_page_number %}">
           <i class="icon-chevron-right"></i>
         </a>
       </li>

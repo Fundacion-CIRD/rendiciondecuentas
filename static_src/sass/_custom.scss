@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('/static/fonts/icomoon.eot?kyadah');
-  src:  url('/static/fonts/icomoon.eot?kyadah#iefix') format('embedded-opentype'),
-    url('/static/fonts/icomoon.ttf?kyadah') format('truetype'),
-    url('/static/fonts/icomoon.woff?kyadah') format('woff'),
-    url('/static/fonts/icomoon.svg?kyadah#icomoon') format('svg');
+  src:  url('/static/fonts/icomoon.eot?itj3gv');
+  src:  url('/static/fonts/icomoon.eot?itj3gv#iefix') format('embedded-opentype'),
+    url('/static/fonts/icomoon.ttf?itj3gv') format('truetype'),
+    url('/static/fonts/icomoon.woff?itj3gv') format('woff'),
+    url('/static/fonts/icomoon.svg?itj3gv#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -46,14 +46,14 @@
 .icon-chevron-up:before {
   content: "\e903";
 }
-
-[class^="icon-sort"], [class*=" icon-sort"] {
-  color: #c3c3c3;
-  cursor: pointer;
-  &:hover {
-    color: theme-color('blue-1');
-    text-decoration: none;
-  }
+.icon-facebook:before {
+  content: "\ea91";
+}
+.icon-instagram:before {
+  content: "\ea92";
+}
+.icon-twitter:before {
+  content: "\ea96";
 }
 
 .icon-sort-asc,
@@ -76,6 +76,28 @@ footer {
   background-color: #F2F2F2;
   padding-top: 3.1rem;
   padding-bottom: 3.1rem;
+  .social-networks {
+    a {
+      background-color: theme-color('blue-1');
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 5px;
+      margin-right: 5px;
+      color: white;
+      font-size: 12px;
+      border-radius: 12px;
+      width: 24px;
+      height: 24px;
+      &:hover {
+        background-color: theme-color('blue-4');
+        text-decoration: none;
+      }
+      &:active {
+        background-color: $orange;
+      }
+    }
+  }
 }
 
 nav.navbar {
@@ -217,6 +239,26 @@ h3 {
 hr {
   margin: 56px 0;
   border-color: #e5e5e5;
+}
+
+.todos-por-py {
+  background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 45%);
+  p {
+    color: white;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    font-weight: 500;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    margin-bottom: 0;
+    a {
+      color: white;
+      text-decoration: underline;
+    }
+  }
+  img {
+    z-index: -1;
+  }
 }
 
 .resumen-nros {
@@ -459,6 +501,13 @@ hr {
   .card {
     border: 2px solid #C1C1C1;
     border-radius: 20px;
+    .form-control-sm {
+      font-size: 14px;
+      border-radius: 8px;
+    }
+    .btn {
+      max-width: 140px;
+    }
   }
 }
 

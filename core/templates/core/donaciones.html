@@ -55,14 +55,14 @@
       <div class="card card-body">
         <form>
           <div class="row">
-            <div class="col-lg-3 col-sm-4 col-12">
+            <div class="col-sm-4 col-12">
               <div class="form-group">
                 <label class="form-label" for="donante">Donante</label>
                 <input type="text" class="form-control form-control-sm" id="donante" name="donante"
                        {% if request.GET.donante %}value="{{ request.GET.donante }}"{% endif %}>
               </div>
             </div>
-            <div class="col-lg-3 col-sm-4 col-12">
+            <div class="col-sm-4 col-12">
               <div class="form-group" id="fecha">
                 <fieldset>
                   <legend class="form-label">Fecha</legend>
@@ -75,7 +75,7 @@
                 </fieldset>
               </div>
             </div>
-            <div class="col-lg-3 col-sm-4 col-12">
+            <div class="col-sm-4 col-12">
               <fieldset>
                 <legend class="form-label">Monto</legend>
                 <input type="text" class="form-control form-control-sm mb-1" name="monto_desde" placeholder="Desde"
@@ -84,9 +84,9 @@
                        {% if request.GET.fecha_hasta %}value="{{ request.GET.monto_hasta }}"{% endif %}>
               </fieldset>
             </div>
-            <div class="col-lg-3 col-sm-12 col-12 d-flex d-lg-block justify-content-center mt-2 mt-md-0">
-              <button type="submit" class="btn btn-primary">Aplicar</button>
-            </div>
+          </div>
+          <div class="w-100 d-flex justify-content-center justify-content-md-end mt-3">
+            <button type="submit" class="btn btn-primary">Aplicar</button>
           </div>
         </form>
       </div>
@@ -188,7 +188,7 @@
         {% if is_paginated %}
           <div class="w-100 mx-auto">
             <div class="text-center">
-              {% include 'core/partials/paginator.html' %}
+              {% include 'core/partials/paginator.html' with ruta='core:donaciones' %}
             </div>
           </div>
         {% endif %}

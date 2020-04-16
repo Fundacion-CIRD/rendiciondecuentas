@@ -2,7 +2,8 @@ from datetime import datetime
 from io import BytesIO
 
 import xlsxwriter
-from django.db.models import Sum
+from django.db.models import Sum, F, CharField
+from django.db.models.functions import ConcatPair
 from django.http import FileResponse
 from django.views.generic import TemplateView, ListView, DetailView
 from rest_framework.generics import ListAPIView
@@ -133,34 +134,41 @@ def descargar_donaciones(request):
 
 class AdquisicionesView(ListView):
     template_name = 'core/adquisiciones.html'
-    model = Compra
+    model = ItemCompra
     paginate_by = 10
     internal_filters = {
-        'proveedor': 'proveedor__nombre__icontains',
-        'fecha_desde': 'fecha__gte',
-        'fecha_hasta': 'fecha__lte',
-        'monto_desde': 'monto_pyg__gte',
-        'monto_hasta': 'monto_pyg__lte',
+        'concepto': 'concept_name__icontains',
+        'fecha_desde': 'compra__fecha__gte',
+        'fecha_hasta': 'compra__fecha__lte',
+        'precio_unitario_desde': 'precio_unitario_pyg__gte',
+        'precio_unitario_hasta': 'precio_unitario_pyg__lte',
+        'precio_total_desde': 'precio_total_pyg__gte',
+        'precio_total_hasta': 'precio_total_pyg__lte',
     }
-    order_fields = ('fecha', '-fecha', 'proveedor', '-proveedor', 'monto', '-monto')
+    order_fields = (
+        'fecha', '-fecha', 'concepto', '-concepto', 'precio_unitario', '-precio_unitario', 'precio_total',
+        '-precio_total')
     internal_orders = {
-        'fecha': 'fecha',
-        '-fecha': '-fecha',
-        'proveedor': 'proveedor__nombre',
-        '-proveedor': '-proveedor__nombre',
-        'monto': 'monto_pyg',
-        '-monto': '-monto_pyg',
+        'fecha': 'compra__fecha',
+        '-fecha': '-compra__fecha',
+        'concepto': 'concept_name',
+        '-concepto': '-concept_name',
+        'precio_unitario': 'precio_unitario_pyg',
+        '-precio_unitario': '-precio_unitario_pyg',
+        'precio_total': 'precio_total_pyg',
+        '-precio_total': '-precio_total_pyg',
     }
 
     def get_ordering(self):
         ordering = self.request.GET.get('orden')
         if ordering in self.order_fields:
             return self.internal_orders[ordering]
-        return '-fecha'
+        return '-compra__fecha'
 
     def get_queryset(self):
         qs = super().get_queryset()
-        qs = qs.annotate(monto_pyg=Sum('items__precio_total_pyg'))
+        qs = qs.annotate(
+            concept_name=ConcatPair('concepto__padre__nombre', 'concepto__nombre', 'concepto__medida__nombre'))
         form = AdquisicionesForm(data=self.request.GET)
         if form.is_valid():
             qs = filter_query(form, qs, self.internal_filters)
@@ -169,7 +177,7 @@ class AdquisicionesView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
-        context['adquisiciones'] = context['page_obj'] if context.get('is_paginated') else context['compra_list']
+        context['items'] = context['page_obj'] if context.get('is_paginated') else context['itemcompra_list']
         adquisiciones = Compra.objects.annotate(total_compra=Sum('items__precio_total_pyg'))
         context['total_adquisiciones'] = adquisiciones.aggregate(total=Sum('total_compra'))['total']
         context['orden'] = self.request.GET.get('orden')
@@ -177,18 +185,8 @@ class AdquisicionesView(ListView):
 
 
 def descargar_adquisiciones(request):
-    internal_filters = {
-        'proveedor': 'proveedor__nombre__icontains',
-        'fecha_desde': 'fecha__gte',
-        'fecha_hasta': 'fecha__lte',
-        'monto_desde': 'monto_pyg__gte',
-        'monto_hasta': 'monto_pyg__lte',
-    }
     adquisiciones = Compra.objects.all().prefetch_related('proveedor', 'items', 'tipo_comprobante')
     adquisiciones = adquisiciones.annotate(monto_pyg=Sum('items__precio_total_pyg'))
-    form = AdquisicionesForm(data=request.GET)
-    if form.is_valid():
-        adquisiciones = filter_query(form, adquisiciones, internal_filters)
     items = ItemCompra.objects.filter(compra__in=adquisiciones)
     buffer = BytesIO()
     workbook = xlsxwriter.Workbook(buffer)
