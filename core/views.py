@@ -2,6 +2,7 @@ from datetime import datetime
 from io import BytesIO
 
 import xlsxwriter
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Sum, F, CharField
 from django.db.models.functions import ConcatPair
 from django.http import FileResponse
@@ -12,7 +13,7 @@ from core.forms import DonacionesForm, AdquisicionesForm
 from core.graph_utils import total_por_concepto
 from core.models import Donacion, Compra, ItemCompra
 from core.serializers import DonacionSerializer, CompraSerializer
-from utils.models import Galeria
+from utils.models import Galeria, Documento
 
 
 def filter_query(form, qs, internal_filters):
@@ -237,6 +238,8 @@ class DetalleAdquisicionView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_adquisicion'] = context['object'].items.aggregate(total=Sum('precio_total_pyg'))['total']
+        content_type = ContentType.objects.get_for_model(Compra)
+        context['documentos'] = Documento.objects.filter(object_id=context['object'].id, content_type=content_type)
         return context
 
 

@@ -1,6 +1,15 @@
 {% extends 'core/base.html' %}
 {% load static %} {% load humanize %} {% load query_utils %}
 
+{% block og_title %}Donaciones - Rendición de Donaciones COVID-19{% endblock %}
+{% block og_description %}
+  En esta sección podés acceder datos de las donaciones recibidas tales como fecha, nombre, N° de comprobante
+  del depósito, N° de recibo y el monto. A la derecha de la pantalla vas a ver el monto total de las donaciones
+  recibidas y además tenés la opción de filtrar los datos y descargar esa selección o completamente el data set
+  en Excel o JSON.
+{% endblock %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+
 {% block styles %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">

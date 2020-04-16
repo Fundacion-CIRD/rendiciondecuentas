@@ -2,6 +2,10 @@
 {% load static %}
 {% load humanize %}
 
+{% block og_title %}Rendición de Donaciones COVID-19{% endblock %}
+{% block og_description %}Sistema de Rendición de Cuentas de Donaciones Recibidas para la lucha contra el COVID-19.{% endblock %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+
 {% block content %}
   {% include 'core/partials/navbar.html' with display='none' fixed=True %}
   <div id="banner" class="banner">

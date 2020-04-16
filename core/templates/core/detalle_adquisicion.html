@@ -1,6 +1,12 @@
 {% extends 'core/base.html' %}
 {% load static %} {% load humanize %} {% load query_utils %}
 
+{% block og_title %}Detalle de Adquisición - Rendición de Donaciones COVID-19{% endblock %}
+{% block og_description %}
+  Sistema de Rendición de Cuentas de Donaciones Recibidas para la lucha contra el COVID-19.
+{% endblock %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+
 {% block styles %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
@@ -70,6 +76,25 @@
             <td class="text-center">{{ item.cantidad }}</td>
             <td class="text-right">{{ item.precio_unitario_pyg|floatformat:0|intcomma }}</td>
             <td class="text-right">{{ item.precio_total_pyg|floatformat:0|intcomma }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <h4 class="mt-5 font-weight-light">Documentos relacionados</h4>
+    <table class="table table-responsive-md tabla">
+      <thead>
+        <tr>
+          <th class="text-nowrap" scope="col">Descripción</th>
+          <th class="text-nowrap" scope="col">Archivo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in documentos%}
+          <tr>
+            <td>{{ doc.descripcion }}</td>
+            <td>
+              <a href="{{ doc.archivo.url }}" target="_blank">Descargar</a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>

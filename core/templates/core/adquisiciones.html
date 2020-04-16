@@ -1,6 +1,14 @@
 {% extends 'core/base.html' %}
 {% load static %} {% load humanize %} {% load query_utils %}
 
+{% block og_title %}Adquisiciones - Rendición de Donaciones COVID-19{% endblock %}
+{% block og_description %}
+  En esta sección podés acceder datos de las adquisiciones realizadas tales como Fecha, Concepto, cantidad, y
+  Montos. A la derecha de la pantalla vas a ver el monto total de las adquisiciones realizadas y además tenés la
+  opción de filtrar los datos y descargar el data set en formato Excel o JSON.
+{% endblock %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+
 {% block styles %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
@@ -22,8 +30,8 @@
     <h2 class="mt-0">Adquisiciones Realizadas</h2>
     <div class="row">
       <div class="col-md-6">
-        <p>En esta sección podés acceder datos de las adquisiciones realizadas tales como fecha, Concepto, cantidad, y
-          montos. A la derecha de la pantalla vas a ver el monto total de las adquisiciones realizadas y además tenés la
+        <p>En esta sección podés acceder datos de las adquisiciones realizadas tales como Fecha, Concepto, cantidad, y
+          Montos. A la derecha de la pantalla vas a ver el monto total de las adquisiciones realizadas y además tenés la
           opción de filtrar los datos y descargar el data set en formato Excel o JSON.</p>
       </div>
       <div class="col-md-6">
@@ -76,18 +84,22 @@
             <div class="col-lg-3 col-sm-6 col-12">
               <fieldset>
                 <legend class="form-label">Precio Unitario</legend>
-                <input type="text" class="form-control form-control-sm mb-1" name="precio_unitario_desde" placeholder="Desde"
+                <input type="text" class="form-control form-control-sm mb-1" name="precio_unitario_desde"
+                       placeholder="Desde"
                        {% if request.GET.precio_unitario_desde %}value="{{ request.GET.precio_unitario_desde }}"{% endif %}>
-                <input type="text" class="form-control form-control-sm my-1" name="precio_unitario_hasta" placeholder="Hasta"
+                <input type="text" class="form-control form-control-sm my-1" name="precio_unitario_hasta"
+                       placeholder="Hasta"
                        {% if request.GET.precio_unitario_hasta %}value="{{ request.GET.precio_unitario_hasta }}"{% endif %}>
               </fieldset>
             </div>
             <div class="col-lg-3 col-sm-6 col-12">
               <fieldset>
                 <legend class="form-label">Precio Total</legend>
-                <input type="text" class="form-control form-control-sm mb-1" name="precio_total_desde" placeholder="Desde"
+                <input type="text" class="form-control form-control-sm mb-1" name="precio_total_desde"
+                       placeholder="Desde"
                        {% if request.GET.precio_total_desde %}value="{{ request.GET.precio_total_desde }}"{% endif %}>
-                <input type="text" class="form-control form-control-sm my-1" name="precio_total_hasta" placeholder="Hasta"
+                <input type="text" class="form-control form-control-sm my-1" name="precio_total_hasta"
+                       placeholder="Hasta"
                        {% if request.GET.precio_total_hasta %}value="{{ request.GET.precio_total_hasta }}"{% endif %}>
               </fieldset>
             </div>
