@@ -56,7 +56,7 @@ class Donacion(models.Model):
     fecha = models.DateField(verbose_name='fecha')
     donante = models.ForeignKey(Entidad, on_delete=models.PROTECT, related_name='+', verbose_name='nombre')
     cuenta = models.ForeignKey(Cuenta, on_delete=models.PROTECT, related_name='ingresos', verbose_name='cuenta')
-    nro_comprobante = models.CharField(max_length=50, verbose_name='Comprobante Nro.')
+    nro_comprobante = models.CharField(max_length=50, default='', blank=True, verbose_name='Comprobante Nro.')
     recibo_nro = models.IntegerField(null=True, blank=True, verbose_name='Recibo de Donación Nro.')
     monto = models.FloatField(verbose_name='Monto')
     moneda = models.CharField(max_length=3, choices=MONEDA_CHOICES, default=PYG, verbose_name='Moneda')
