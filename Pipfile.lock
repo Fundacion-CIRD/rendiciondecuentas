@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "dba528351dbc066041871425b6a3a777ccd774f409b5e49cc393e8c185a9fff9"
+            "sha256": "05ac9299fe400bb6d842f8b8b5bc7aa956d7480ce901282122f026b0d6db8480"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -52,6 +52,14 @@
             "index": "pypi",
             "version": "==0.1.6"
         },
+        "django-admin-rangefilter": {
+            "hashes": [
+                "sha256:088cde1ec1d81ab6053b939d7ef5cb4a3991f295b558422e763d4760b96b21e3",
+                "sha256:f2b77568b57e65c14d76aa3fae7e5d0a9caa93335e116c3377d9c1f43d233dbb"
+            ],
+            "index": "pypi",
+            "version": "==0.5.4"
+        },
         "django-appconf": {
             "hashes": [
                 "sha256:1b1d0e1069c843ebe8ae5aa48ec52403b1440402b320c3e3a206a0907e97bb06",
@@ -98,11 +106,11 @@
         },
         "google-api-python-client": {
             "hashes": [
-                "sha256:0f5b42a14e2d2f7dee40f2e4514531dbe95ebde9c2173b1c4040a65c427e7900",
-                "sha256:5032ad1af5046889649b3848f2e871889fbb6ae440198a549fe1699581300386"
+                "sha256:e2ad18d57a1bc8d982f05cd2b1503cacf56d5b4c1a052d99535baa7042557e1e",
+                "sha256:ffd6bf6310bc4be45483149f782d4569030a1a77109239f8c5ebd0ae5338a791"
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-            "version": "==1.8.0"
+            "version": "==1.8.1"
         },
         "google-auth": {
             "hashes": [
@@ -297,11 +305,11 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc",
-                "sha256:87716c2d2a7121198ebcb7ce7cccf6ce5e9ba539041cfbaeecfb641dc0bf6acc"
+                "sha256:3018294ebefce6572a474f0604c2021e33b3fd8006ecd11d62107a5d2a963527",
+                "sha256:88206b0eb87e6d677d424843ac5209e3fb9d0190d0ee169599165ec25e9d9115"
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3' and python_version < '4'",
-            "version": "==1.25.8"
+            "version": "==1.25.9"
         },
         "xlsxwriter": {
             "hashes": [

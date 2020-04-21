@@ -1,16 +1,19 @@
 from django.contrib import admin
+from rangefilter.filter import DateRangeFilter
 
 from utils.admin import DocumentoInline
 from .models import Entidad, Cuenta, Donacion, Compra, Concepto, TipoCuenta, ItemCompra, TipoComprobante, ItemEntrega, \
     Entrega
 
 
+@admin.register(Entidad)
 class EntidadAdmin(admin.ModelAdmin):
     list_display = ('id', 'nombre')
     list_display_links = ('nombre',)
     search_fields = ('nombre',)
 
 
+@admin.register(Cuenta)
 class CuentaAdmin(admin.ModelAdmin):
     list_display = ('entidad', 'tipo', 'moneda')
     list_display_links = ('entidad',)
@@ -18,15 +21,17 @@ class CuentaAdmin(admin.ModelAdmin):
     search_fields = ('entidad__nombre', 'tipo__nombre', 'nro')
 
 
+@admin.register(Donacion)
 class DonacionAdmin(admin.ModelAdmin):
     autocomplete_fields = ('donante', 'cuenta',)
     inlines = (DocumentoInline,)
     list_display = ('id', 'fecha', 'donante', 'monto', 'moneda')
     list_display_links = ('id', 'fecha',)
-    list_filter = ('cuenta', 'moneda', 'es_anonimo')
+    list_filter = ('cuenta', 'moneda', 'es_anonimo', ('fecha', DateRangeFilter))
     search_fields = ('donante__nombre', 'cuenta__nro', 'cuenta__entidad__nombre', 'nro_comprobante', 'recibo_nro')
 
 
+@admin.register(Concepto)
 class ConceptoAdmin(admin.ModelAdmin):
     autocomplete_fields = ('medida',)
     list_display = ('get_nombre', 'medida')
@@ -47,10 +52,12 @@ class ItemCompraInline(admin.TabularInline):
     min_num = 1
 
 
+@admin.register(TipoComprobante)
 class TipoComprobanteAdmin(admin.ModelAdmin):
     search_fields = ('nombre',)
 
 
+@admin.register(Compra)
 class CompraAdmin(admin.ModelAdmin):
     autocomplete_fields = ('proveedor', 'tipo_comprobante')
     inlines = [ItemCompraInline, DocumentoInline]
@@ -75,17 +82,11 @@ class ItemEntregaInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(Entrega)
 class EntregaAdmin(admin.ModelAdmin):
     list_display = ('fecha', 'entidad')
     list_filter = ('entidad',)
     inlines = [ItemEntregaInline, DocumentoInline]
 
 
-admin.site.register(Entidad, EntidadAdmin)
-admin.site.register(TipoComprobante, TipoComprobanteAdmin)
 admin.site.register(TipoCuenta)
-admin.site.register(Cuenta, CuentaAdmin)
-admin.site.register(Concepto, ConceptoAdmin)
-admin.site.register(Donacion, DonacionAdmin)
-admin.site.register(Compra, CompraAdmin)
-admin.site.register(Entrega, EntregaAdmin)

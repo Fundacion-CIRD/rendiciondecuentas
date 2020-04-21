@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'active_link',
     'rest_framework',
+    'rangefilter',
     'utils',
     'core',
 ]
