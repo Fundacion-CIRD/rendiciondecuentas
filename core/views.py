@@ -37,6 +37,13 @@ class HomeView(TemplateView):
         context['total_adquisiciones'] = adquisiciones.aggregate(total=Sum('total_compra'))['total']
         if context['total_donaciones'] and context['total_adquisiciones']:
             context['saldo'] = context['total_donaciones'] - context['total_adquisiciones']
+
+        # ultima fecha de actualizacion
+        ultima_donacion = Donacion.objects.order_by('-fecha').first()
+        ultima_adquisicion = Compra.objects.order_by('-fecha').first()
+        context['ultima_actualizacion'] = \
+            ultima_donacion.fecha if ultima_donacion.fecha > ultima_adquisicion.fecha else ultima_adquisicion.fecha
+
         # Calculos para el grafico
         conceptos = total_por_concepto()
         context['labels'] = [el for el in conceptos.keys()]
@@ -51,7 +58,7 @@ class AntecedentesView(TemplateView):
 class DonacionesView(ListView):
     template_name = 'core/donaciones.html'
     model = Donacion
-    paginate_by = 10
+    paginate_by = 2
     internal_filters = {
         'donante': 'donante__nombre__icontains',
         'fecha_desde': 'fecha__gte',
@@ -262,4 +269,3 @@ class GaleriaView(TemplateView):
         galeria = Galeria.objects.get(pk=1)
         context['fotos'] = galeria.foto_set.all()
         return context
-
