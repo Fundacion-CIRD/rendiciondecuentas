@@ -45,7 +45,7 @@ class DonacionAdmin(admin.ModelAdmin):
         return my_urls + urls
 
     def descargar_excel(self, request):
-        qs = self.get_changelist_instance(request).result_list
+        qs = self.get_changelist_instance(request).queryset
         buffer = BytesIO()
         workbook = xlsxwriter.Workbook(buffer)
         worksheet = workbook.add_worksheet(name='Donaciones')
@@ -132,7 +132,7 @@ class CompraAdmin(admin.ModelAdmin):
         return my_urls + urls
 
     def descargar_excel(self, request):
-        qs = self.get_changelist_instance(request).result_list
+        qs = self.get_changelist_instance(request).queryset
         items = ItemCompra.objects.filter(compra__in=qs).order_by('compra')
         buffer = BytesIO()
         workbook = xlsxwriter.Workbook(buffer)
