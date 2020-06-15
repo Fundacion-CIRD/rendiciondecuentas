@@ -11,15 +11,24 @@
 {% endblock %}
 
 {% block content %}
+  {% include 'core/partials/navbar.html' %}
   <div class="container">
-    <div class="row galeria">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'core:index' %}">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Galería de Imágenes</li>
+      </ol>
+    </nav>
+    <h2 class="mt-0">Galería de Imágenes</h2>
+    <div class="row galeria mb-4">
       {% for foto in fotos %}
-        <a href="{{ foto.archivo.url }}" data-toggle="lightbox" data-gallery="example-gallery" data-footer="{{ foto.descripcion }}" class="col-12 col-sm-6 col-lg-4 my-2 position-relative">
-          <img src="{{ foto.thumbnail.url }}" class="img-fluid">
-          <p class="text-white">This is some text</p>
+        <a href="{{ foto.archivo.url }}" data-toggle="lightbox" data-gallery="example-gallery" data-footer="{{ foto.descripcion }}" class="col-12 col-sm-6 col-lg-4 my-2 my-2">
+          <div class="img" style="background-image: url('{{ foto.thumbnail.url }}')">
+          </div>
         </a>
       {% endfor %}
     </div>
+    {% include 'core/partials/paginator.html' with ruta='core:galeria' %}
   </div>
 {% endblock %}
 

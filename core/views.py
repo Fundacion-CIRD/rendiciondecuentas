@@ -3,9 +3,11 @@ from io import BytesIO
 
 import xlsxwriter
 from django.contrib.contenttypes.models import ContentType
+from django.core.paginator import Paginator
 from django.db.models import Sum, F, CharField
 from django.db.models.functions import ConcatPair
 from django.http import FileResponse
+from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
 from rest_framework.generics import ListAPIView
 
@@ -13,7 +15,7 @@ from core.forms import DonacionesForm, AdquisicionesForm
 from core.graph_utils import total_por_concepto
 from core.models import Donacion, Compra, ItemCompra
 from core.serializers import DonacionSerializer, CompraSerializer
-from utils.models import Galeria, Documento
+from utils.models import Galeria, Documento, Foto
 
 
 def filter_query(form, qs, internal_filters):
@@ -261,11 +263,22 @@ class CompraAPIView(ListAPIView):
     queryset = Compra.objects.all()
 
 
-class GaleriaView(TemplateView):
+class GaleriaView(ListView):
     template_name = 'core/gallery.html'
+    model = Foto
+    paginate_by = 18
+
+    def get_queryset(self):
+        try:
+            galeria = Galeria.objects.get(pk=1)
+            return galeria.foto_set.all()
+        except Galeria.DoesNotExist:
+            return Foto.objects.none()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        galeria = Galeria.objects.get(pk=1)
-        context['fotos'] = galeria.foto_set.all()
+        if context.get('is_paginated'):
+            context['fotos'] = context['page_obj']
+        else:
+            context['fotos'] = context['foto_list']
         return context
