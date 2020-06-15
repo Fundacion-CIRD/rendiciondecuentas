@@ -1,13 +1,10 @@
-from datetime import datetime
 from io import BytesIO
 
 import xlsxwriter
 from django.contrib.contenttypes.models import ContentType
-from django.core.paginator import Paginator
-from django.db.models import Sum, F, CharField
+from django.db.models import Sum
 from django.db.models.functions import ConcatPair
 from django.http import FileResponse
-from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
 from rest_framework.generics import ListAPIView
 
@@ -16,6 +13,13 @@ from core.graph_utils import total_por_concepto
 from core.models import Donacion, Compra, ItemCompra
 from core.serializers import DonacionSerializer, CompraSerializer
 from utils.models import Galeria, Documento, Foto
+
+
+def contains_any(a, b):
+    for el in a:
+        if el in b:
+            return True
+    return False
 
 
 def filter_query(form, qs, internal_filters):
@@ -98,6 +102,8 @@ class DonacionesView(ListView):
         context = super().get_context_data(object_list=object_list, **kwargs)
         # context['total_donaciones'] = Donacion.objects.aggregate(total=Sum('monto_pyg'))['total']
         context['total_donaciones'] = context['donacion_list'].aggregate(total=Sum('monto_pyg'))['total']
+        if contains_any(self.request.GET.keys(), self.internal_filters.keys()):
+            context['filtered'] = True
         if context.get('is_paginated'):
             context['donaciones'] = context['page_obj']
         else:
@@ -193,6 +199,8 @@ class AdquisicionesView(ListView):
         # adquisiciones = Compra.objects.annotate(total_compra=Sum('items__precio_total_pyg'))
         context['total_adquisiciones'] = adquisiciones.aggregate(total=Sum('total_compra'))['total']
         context['orden'] = self.request.GET.get('orden')
+        if contains_any(self.request.GET.keys(), self.internal_filters.keys()):
+            context['filtered'] = True
         return context
 
 

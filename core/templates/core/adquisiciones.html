@@ -37,7 +37,11 @@
       <div class="col-md-6">
         <div class="d-flex align-items-center justify-content-center flex-column my-4 resumen-nros">
           <div class="monto">Gs. {{ total_adquisiciones|floatformat:0|intcomma }}</div>
-          <div class="desc mb-4">Total Adquisiciones según filtros</div>
+          {% if filtered %}
+            <div class="desc mb-4">Total Adquisiciones según filtros</div>
+          {% else %}
+            <div class="desc mb-4">Total Adquisiciones Realizadas</div>
+          {% endif %}
         </div>
       </div>
     </div>
