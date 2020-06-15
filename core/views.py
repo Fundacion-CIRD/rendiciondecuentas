@@ -64,7 +64,7 @@ class AntecedentesView(TemplateView):
 class DonacionesView(ListView):
     template_name = 'core/donaciones.html'
     model = Donacion
-    paginate_by = 1
+    paginate_by = 10
     internal_filters = {
         'donante': 'donante__nombre__icontains',
         'fecha_desde': 'fecha__gte',
