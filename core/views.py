@@ -96,7 +96,8 @@ class DonacionesView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
-        context['total_donaciones'] = Donacion.objects.aggregate(total=Sum('monto_pyg'))['total']
+        # context['total_donaciones'] = Donacion.objects.aggregate(total=Sum('monto_pyg'))['total']
+        context['total_donaciones'] = context['donacion_list'].aggregate(total=Sum('monto_pyg'))['total']
         if context.get('is_paginated'):
             context['donaciones'] = context['page_obj']
         else:
@@ -188,7 +189,8 @@ class AdquisicionesView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
         context['items'] = context['page_obj'] if context.get('is_paginated') else context['itemcompra_list']
-        adquisiciones = Compra.objects.annotate(total_compra=Sum('items__precio_total_pyg'))
+        adquisiciones = Compra.objects.filter(items__in=context['items']).annotate(total_compra=Sum('items__precio_total_pyg'))
+        # adquisiciones = Compra.objects.annotate(total_compra=Sum('items__precio_total_pyg'))
         context['total_adquisiciones'] = adquisiciones.aggregate(total=Sum('total_compra'))['total']
         context['orden'] = self.request.GET.get('orden')
         return context
