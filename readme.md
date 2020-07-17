@@ -1,8 +1,8 @@
 # Plataforma de transparencia de donaciones
 
-Este es un proyecto del [CIRD](https://cird.org.py) en colaboración con [CIVILAB](https://civilab.org.py)
+Este es un proyecto del [CIRD](https://cird.org.py) en colaboración con [CIVILAB](https://civilab.org.py).
 
-Entre las funionalidades principales de la plataforma tenemos
+Entre las funionalidades principales de la plataforma tenemos:
 
 - Administración de donaciones recibidas
 - Administración de gastos
@@ -15,6 +15,7 @@ Entre las funionalidades principales de la plataforma tenemos
   - [Python >= 3.6](https://www.python.org/)
   - [Pipenv](https://github.com/pypa/pipenv)
   - [PostgreSQL](https://www.postgresql.org/)
+  - [NodeJS](https://nodejs.org)
 
 ## Development
 1. Clone repository: `git clone xxxxxx`
@@ -24,7 +25,7 @@ Entre las funionalidades principales de la plataforma tenemos
     ````
    {
       "allowed_hosts": ["localhost", "127.0.0.1", <ANY_OTHER_HOST>],
-      "db_name": "adsum",
+      "db_name": "<DB_NAME>",
       "db_user": "<POSTGRESQL_DB_USER>",
       "db_password": "<POSTGRESQL_DB_PASSWORD>",
       "db_host": "<POSTGRESQL_DB_HOST>",
@@ -36,16 +37,15 @@ Entre las funionalidades principales de la plataforma tenemos
 6. Run migrations: `python manage.py migrate`
 7. Install `unaccent` extension on your PostgreSQL database:
     ````
-   $ psql -d adsum
+   $ psql -d <DB_NAME>
    <DB_NAME>=# create extension unaccent;
-7. Create SuperUser: `python manage.py createsuperuser`
+8. Create SuperUser: `python manage.py createsuperuser`
+9. Go to `static_src`
+10. Run `npm install`
+11. Run `npm run compile:css:watch`
 8. Run Development Server: `python manage.py runserver`
 9. Go to localhost:8000/admin and  create the first instances of donations and adquisitions. 
 10. Go to localhost:8000/
-
-
-# TODO: how to serve statics files
-
 
 
 ## Contribuye!
