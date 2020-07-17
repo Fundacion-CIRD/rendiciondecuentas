@@ -41,6 +41,7 @@
     <div class="row resumen-nros">
       <div class="col-md-6">
         <div class="monto">Gs. {{ total_donaciones|floatformat:0|intcomma }}</div>
+        <div class="porcentaje">100%</div>
         <div class="desc mb-4">Total Donaciones Recibidas</div>
         <div class="d-flex align-items-center justify-content-center">
           <a href="{% url 'core:donaciones' %}" class="btn btn-primary">Ver Donaciones</a>
@@ -48,6 +49,7 @@
       </div>
       <div class="col-md-6 mt-4 mt-md-0">
         <div class="monto">Gs. {{ total_adquisiciones|floatformat:0|intcomma }}</div>
+        <div class="porcentaje">{{ porcentaje_adquisiciones }}%</div>
         <div class="desc mb-4">Total Adquisiciones Realizadas</div>
         <div class="d-flex align-items-center justify-content-center">
           <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver Adquisiciones</a>
@@ -55,6 +57,7 @@
       </div>
       <div class="col-md-12 mt-5">
         <div class="monto">Gs. {{ saldo|floatformat:0|intcomma }}</div>
+        <div class="porcentaje">{{ porcentaje_saldo }}%</div>
         <div class="desc mb-4">Saldo de Donaciones</div>
       </div>
     </div> <!-- resumen-nros -->

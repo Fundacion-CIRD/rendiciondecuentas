@@ -43,6 +43,8 @@ class HomeView(TemplateView):
         context['total_adquisiciones'] = adquisiciones.aggregate(total=Sum('total_compra'))['total']
         if context['total_donaciones'] and context['total_adquisiciones']:
             context['saldo'] = context['total_donaciones'] - context['total_adquisiciones']
+        context['porcentaje_adquisiciones'] = int(context['total_adquisiciones'] * 100 / context['total_donaciones'])
+        context['porcentaje_saldo'] = 100 - context['porcentaje_adquisiciones']
 
         # ultima fecha de actualizacion
         ultima_donacion = Donacion.objects.order_by('-fecha').first()

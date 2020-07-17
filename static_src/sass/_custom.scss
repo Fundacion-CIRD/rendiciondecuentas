@@ -647,6 +647,14 @@ hr {
   padding: 1rem 0;
 }
 
+.porcentaje {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.subtitle a {
+  color: white;
+}
 
 @media (min-width: map_get($grid-breakpoints, 'md')) {
   .py-logos {
