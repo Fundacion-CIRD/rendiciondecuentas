@@ -11,17 +11,17 @@ Entre las funionalidades principales de la plataforma tenemos:
 - Descarga en CSV y JSON de donaciones  y compras
  
 
-## Requirements
+## Requerimientos
   - [Python >= 3.6](https://www.python.org/)
   - [Pipenv](https://github.com/pypa/pipenv)
   - [PostgreSQL](https://www.postgresql.org/)
   - [NodeJS](https://nodejs.org)
 
-## Development
-1. Clone repository: `git clone xxxxxx`
-2. Install dependencies: `pipenv install`
-3. Create a file called `secrets.json` in root directory
-4. Insert the following lines into the file:
+## Entorno de desarrollo
+1. Clona este repositorio.
+2. Instala las dependencias de Python: `pipenv install`.
+3. Crea un archivo llamado `secrets.json` en la raíz del proyecto.
+4. Inserta las siguientes líneas en el archivo:
     ````
    {
       "allowed_hosts": ["localhost", "127.0.0.1", <ANY_OTHER_HOST>],
@@ -33,28 +33,25 @@ Entre las funionalidades principales de la plataforma tenemos:
       "secret_key": "<DJANGO_SECRET_KEY>",
       "debug": "TRUE"
     }
-5. Activate virtualenv: `pipenv shell`
-6. Run migrations: `python manage.py migrate`
-7. Install `unaccent` extension on your PostgreSQL database:
+5. Activa el entorno virtual: `pipenv shell`
+6. Instala la extension `unaccent` en tu base de datos de PostgreSQL:
     ````
    $ psql -d <DB_NAME>
    <DB_NAME>=# create extension unaccent;
-8. Create SuperUser: `python manage.py createsuperuser`
-9. Go to `static_src`
-10. Run `npm install`
-11. Run `npm run compile:css:watch`
-8. Run Development Server: `python manage.py runserver`
-9. Go to localhost:8000/admin and  create the first instances of donations and adquisitions. 
-10. Go to localhost:8000/
+7. Ejecuta las migraciones: `python manage.py migrate`
+8. Crea el primer superusuario: `python manage.py createsuperuser`
+9. Ve a la carpeta `static_src`
+10. Instala las dependencias de node `npm install`
+11. Ejecuta `npm run compile:css:watch` para compilar el CSS
+8. Inicia el servidor de desarrollo: `python manage.py runserver`
+9. Ve a localhost:8000/admin para crear las primeras entradas. 
+10. Ve a localhost:8000/ para ver el sitio web.
 
 
 ## Contribuye!
 
-Estamos abiertos a recibir bugs, mejoras  y correcciones en la documentación.
-
-Podes hacer en la seccion  de issues [github issue tracker](http://github.com/xxx).
-
-
+Puedes dejarnos bugs y sugerencias en la sección de issues [github issue tracker](http://github.com/xxx),
+o mejor aún envíanos un PR con tus modificaciones. 
 
 ## Licencia
 
