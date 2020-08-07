@@ -1,6 +1,6 @@
 # Plataforma de transparencia de donaciones
 
-Este es un proyecto del [CIRD](https://cird.org.py) en colaboración con [CIVILAB](https://civilab.org.py).
+Este es un proyecto del [CIRD](https://www.cird.org.py) en colaboración con [CIVILAB](c).
 
 Entre las funionalidades principales de la plataforma tenemos:
 
