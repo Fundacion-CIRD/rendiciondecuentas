@@ -1,6 +1,8 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from utils.models import UnidadMedida, TipoCambio
 from utils.constants import PYG, MONEDA_CHOICES
@@ -243,3 +245,22 @@ class ItemEntrega(models.Model):
 
     def __str__(self):
         return '{}: {}'.format(self.concepto, self.cantidad)
+
+
+@receiver(post_save, sender=TipoCambio)
+def update_cambios(sender, instance, created, **kwargs):
+    if not created:
+        donaciones = Donacion.objects.filter(moneda=instance.moneda, fecha=instance.fecha)
+        updated_donaciones = []
+        for d in donaciones:
+            d.monto_pyg = d.monto * instance.cambio
+            updated_donaciones.append(d)
+        Donacion.objects.bulk_update(updated_donaciones, ['monto_pyg'])
+        compras = Compra.objects.filter(moneda=instance.moneda, fecha=instance.fecha)
+        updated_items = []
+        for c in compras:
+            for i in c.items.all():
+                i.precio_unitario_pyg = i.precio_unitario * instance.cambio
+                i.precio_total_pyg = i.precio_total * instance.cambio
+                updated_items.append(i)
+        ItemCompra.objects.bulk_update(updated_items, ['precio_unitario_pyg', 'precio_total_pyg'])
