@@ -55,4 +55,6 @@ o mejor aún envíanos un PR con tus modificaciones.
 
 ## Licencia
 
-Este software esta liberado bajo la licencia  GPL V2.
+Este software esta liberado bajo la licencia  GPL-3.0.
+
+Todos los logotipos utilizados son propiedad intelectual de las entidades que representan. 
