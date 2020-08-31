@@ -25,15 +25,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-sort-asc:before {
-  content: "\e905";
-}
-.icon-sort-desc:before {
-  content: "\e906";
-}
-.icon-sort:before {
-  content: "\e907";
-}
 .icon-chevron-right:before {
   content: "\e900";
 }
@@ -46,6 +37,15 @@
 .icon-chevron-up:before {
   content: "\e903";
 }
+.icon-sort-asc:before {
+  content: "\e904";
+}
+.icon-sort-desc:before {
+  content: "\e905";
+}
+.icon-sort:before {
+  content: "\e906";
+}
 .icon-facebook:before {
   content: "\ea91";
 }
@@ -54,6 +54,9 @@
 }
 .icon-twitter:before {
   content: "\ea96";
+}
+.icon-github:before {
+  content: "\eab0";
 }
 
 .icon-sort-asc,
@@ -423,8 +426,14 @@ hr {
   &-naranja {
     height: 64px;
   }
+  &-bid {
+    height: 64px;
+  }
   &-gob-abierto {
-    height: 63px;
+    height: 64px;
+  }
+  &-civilab {
+    height: 50px;
   }
   &-todos-por-py {
     height: 65px;
@@ -633,6 +642,12 @@ hr {
   .logo{
     &-naranja {
       height: 70px;
+    }
+    &-bid {
+      height: 70px;
+    }
+    &-civilab {
+      height: 50px;
     }
     &-gob-abierto {
       height: 64px;

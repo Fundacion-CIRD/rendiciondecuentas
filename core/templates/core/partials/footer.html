@@ -3,13 +3,24 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6 col-lg-7 d-flex d-md-block justify-content-center flex-column">
-        <div class="logos-apoyo d-flex align-items-top">
+        <div class="logos-apoyo d-flex flex-column justify-content-start align-items-top">
           <div>
-            <p>Apoya:</p>
+            <p>Apoyan:</p>
+            <a href="https://bidlab.org/es" target="_blank">
+              <img class="logo-bid" src="{% static 'img/logo_bid.png' %}" alt="BID LAB">
+            </a>
             <a href="https://www.cird.org.py/econaranja/" target="_blank">
-              <img class="logo-naranja" src="{% static 'img/eco_naranja_logo.png' %}" alt="Economía Naranja">
+              <img class="logo-naranja ml-4" src="{% static 'img/eco_naranja_logo.png' %}" alt="Economía Naranja">
             </a>
           </div>
+{#          <div class="vertical-divider"></div>#}
+          <div class="mt-4">
+            <p>En alianza con:</p>
+            <a href="http://civilab.org.py/" target="_blank">
+              <img class="logo-civilab" src="{% static 'img/logo_civilab.png' %}" alt="Civilab">
+            </a>
+          </div>
+
 {#          <div class="vertical-divider"></div>#}
 {#          <div>#}
 {#            <p>Auspicia:</p>#}
@@ -38,6 +49,9 @@
             </a>
             <a href="https://www.instagram.com/fundacioncird/" target="_blank">
               <i class="icon-instagram"></i>
+            </a>
+            <a href="https://github.com/Fundacion-CIRD/rendiciondecuentas" target="_blank">
+                <i class="icon-github"></i>
             </a>
           </p>
         </div>
