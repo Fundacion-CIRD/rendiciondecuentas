@@ -4,8 +4,8 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from utils.models import UnidadMedida, TipoCambio
-from utils.constants import PYG, MONEDA_CHOICES
+from utils.constants import MONEDA_CHOICES, PYG
+from utils.models import TipoCambio, UnidadMedida
 
 
 class Entidad(models.Model):
@@ -88,7 +88,9 @@ class Donacion(models.Model):
     es_anonimo = models.BooleanField(
         default=True,
         verbose_name="Donante Anonimo",
-        help_text="Desmarcar la casilla si el donante desea que su nombre aparezca en la web",
+        help_text=(
+            "Desmarcar la casilla si el donante desea que su nombre aparezca en la web"
+        ),
     )
     monto_pyg = models.FloatField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -127,7 +129,8 @@ class Donacion(models.Model):
             ).exists()
         ):
             raise ValidationError(
-                "No se encontró un tipo de cambio para la fecha. Favor ingresar primeramente un tipo de cambio."
+                "No se encontró un tipo de cambio para la fecha. Favor ingresar"
+                " primeramente un tipo de cambio."
             )
 
 
@@ -166,11 +169,8 @@ class Concepto(models.Model):
         return "{} ({})".format(self.nombre, self.medida)
 
     def clean(self):
-        try:
-            self.padre
-        except Concepto.DoesNotExist:
-            if not self.medida:
-                raise ValidationError("Debe Seleccionar una Unidad de Medida")
+        if self.padre is None and not self.medida:
+            raise ValidationError("Debe Seleccionar una Unidad de Medida")
 
 
 # class Beneficiario(models.Model):
@@ -221,7 +221,8 @@ class ItemCompra(models.Model):
     def clean(self):
         if self.cantidad * self.precio_unitario != self.precio_total:
             raise ValidationError(
-                "El Producto de Cantidad y Precio Unitario no coincide con el Precio Total."
+                "El Producto de Cantidad y Precio Unitario no coincide con el Precio"
+                " Total."
             )
 
     def get_precio_unitario(self):
@@ -281,7 +282,8 @@ class Compra(models.Model):
             ).exists()
         ):
             raise ValidationError(
-                "No se encontró un tipo de cambio para la fecha. Favor ingresar primeramente un tipo de cambio."
+                "No se encontró un tipo de cambio para la fecha. Favor ingresar"
+                " primeramente un tipo de cambio."
             )
 
     def get_total_pyg(self):

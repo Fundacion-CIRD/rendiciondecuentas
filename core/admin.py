@@ -4,13 +4,24 @@ import xlsxwriter
 from django.contrib import admin
 from django.http import FileResponse
 from django.urls import path
-from rangefilter.filter import DateRangeFilter
+from rangefilter.filters import DateRangeFilter
 
 from utils.admin import DocumentoInline
 from utils.constants import PYG
 from utils.models import TipoCambio
-from .models import Entidad, Cuenta, Donacion, Compra, Concepto, TipoCuenta, ItemCompra, TipoComprobante, ItemEntrega, \
-    Entrega
+
+from .models import (
+    Compra,
+    Concepto,
+    Cuenta,
+    Donacion,
+    Entidad,
+    Entrega,
+    ItemCompra,
+    ItemEntrega,
+    TipoComprobante,
+    TipoCuenta,
+)
 
 
 @admin.register(Entidad)
@@ -29,13 +40,25 @@ class CuentaAdmin(admin.ModelAdmin):
 
 
 class DonacionAdmin(admin.ModelAdmin):
-    autocomplete_fields = ('donante', 'cuenta',)
+    autocomplete_fields = (
+        'donante',
+        'cuenta',
+    )
     change_list_template = 'entities/donaciones_change_list.html'
     inlines = (DocumentoInline,)
     list_display = ('id', 'fecha', 'donante', 'monto', 'moneda')
-    list_display_links = ('id', 'fecha',)
+    list_display_links = (
+        'id',
+        'fecha',
+    )
     list_filter = ('cuenta', 'moneda', 'es_anonimo', ('fecha', DateRangeFilter))
-    search_fields = ('donante__nombre', 'cuenta__nro', 'cuenta__entidad__nombre', 'nro_comprobante', 'recibo_nro')
+    search_fields = (
+        'donante__nombre',
+        'cuenta__nro',
+        'cuenta__entidad__nombre',
+        'nro_comprobante',
+        'recibo_nro',
+    )
 
     def get_urls(self):
         urls = super().get_urls()
@@ -49,7 +72,18 @@ class DonacionAdmin(admin.ModelAdmin):
         buffer = BytesIO()
         workbook = xlsxwriter.Workbook(buffer)
         worksheet = workbook.add_worksheet(name='Donaciones')
-        cabecera = ('ID', 'Fecha', 'Donante', 'Cuenta', 'Nro. Comprobante', 'Nro. Recibo', 'Monto', 'Moneda', 'Cambio', 'Es anonimo')
+        cabecera = (
+            'ID',
+            'Fecha',
+            'Donante',
+            'Cuenta',
+            'Nro. Comprobante',
+            'Nro. Recibo',
+            'Monto',
+            'Moneda',
+            'Cambio',
+            'Es anonimo',
+        )
         row, col = (0, 0)
         for el in cabecera:
             worksheet.write(row, col, el)
@@ -57,7 +91,9 @@ class DonacionAdmin(admin.ModelAdmin):
         row = 1
         for donacion in qs:
             if donacion.moneda != PYG:
-                cambio = TipoCambio.objects.get(fecha=donacion.fecha, moneda=donacion.moneda).cambio
+                cambio = TipoCambio.objects.get(
+                    fecha=donacion.fecha, moneda=donacion.moneda
+                ).cambio
             else:
                 cambio = ''
             worksheet.write(row, 0, donacion.id)
@@ -90,6 +126,7 @@ class ConceptoAdmin(admin.ModelAdmin):
         if obj.padre:
             return '{}: {}'.format(obj.padre.nombre, obj.nombre)
         return obj.nombre
+
     get_nombre.short_description = 'Nombre'
 
 
@@ -110,7 +147,12 @@ class CompraAdmin(admin.ModelAdmin):
     autocomplete_fields = ('proveedor', 'tipo_comprobante')
     change_list_template = 'entities/donaciones_change_list.html'
     inlines = [ItemCompraInline, DocumentoInline]
-    list_display = ('id', 'fecha', 'proveedor', 'precio_total',)
+    list_display = (
+        'id',
+        'fecha',
+        'proveedor',
+        'precio_total',
+    )
     list_display_links = ('fecha',)
     list_filter = ('proveedor', 'tipo_comprobante')
     search_fields = ('proveedor__nombre', 'nro_comprobante', 'nro_orden_pago')
@@ -122,6 +164,7 @@ class CompraAdmin(admin.ModelAdmin):
                 suma += item.precio_total
             return suma
         return None
+
     precio_total.short_description = 'Precio Total'
 
     def get_urls(self):
@@ -138,9 +181,20 @@ class CompraAdmin(admin.ModelAdmin):
         workbook = xlsxwriter.Workbook(buffer)
         worksheet = workbook.add_worksheet(name='Donaciones')
         cabecera = (
-            'ID', 'Fecha', 'Proveedor', 'Tipo de Comprobante', 'Nro. de Comprobante',
-            'Nro. de Timbrado', 'Nro. de Cheque', 'Moneda', 'Cambio', 'ID Item',
-            'Concepto', 'Cantidad', 'Precio Unitario', 'Precio Total'
+            'ID',
+            'Fecha',
+            'Proveedor',
+            'Tipo de Comprobante',
+            'Nro. de Comprobante',
+            'Nro. de Timbrado',
+            'Nro. de Cheque',
+            'Moneda',
+            'Cambio',
+            'ID Item',
+            'Concepto',
+            'Cantidad',
+            'Precio Unitario',
+            'Precio Total',
         )
         row, col = (0, 0)
         for el in cabecera:
@@ -150,7 +204,9 @@ class CompraAdmin(admin.ModelAdmin):
         date_format = workbook.add_format({'num_format': 'yyyy-mm-dd'})
         for item in items:
             if item.compra.moneda != PYG:
-                cambio = TipoCambio.objects.get(fecha=item.compra.fecha, moneda=item.compra.moneda).cambio
+                cambio = TipoCambio.objects.get(
+                    fecha=item.compra.fecha, moneda=item.compra.moneda
+                ).cambio
             else:
                 cambio = ''
             worksheet.write(row, 0, item.compra.id)

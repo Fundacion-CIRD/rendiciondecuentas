@@ -1,0 +1,12 @@
+[run]
+source = .
+omit =
+    # omit migrations
+    */migrations/*
+    # omit hidden folders
+    */.*/*
+    donaciones_cird/asgi.py
+    donaciones_cird/wsgi.py
+    */urls.py
+    manage.py
+    *test*
