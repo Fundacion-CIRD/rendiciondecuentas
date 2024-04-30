@@ -1,0 +1,256 @@
+{% extends 'core/base.html' %}
+{% load static %} {% load humanize %} {% load query_utils %}
+
+{% block og_title %}Adquisiciones - Rendición de Donaciones COVID-19{% endblock %}
+{% block og_description %}
+  En esta sección podés acceder datos de las adquisiciones realizadas tales como Fecha, Concepto, cantidad, y
+  Montos. A la derecha de la pantalla vas a ver el monto total de las adquisiciones realizadas y además tenés la
+  opción de filtrar los datos y descargar el data set en formato Excel o JSON.
+{% endblock %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+
+{% block styles %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
+{% endblock %}
+
+{% block title %}
+  Adquisiciones | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  {% include 'core/partials/navbar.html' %}
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'core:index' %}">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Adquisiciones</li>
+      </ol>
+    </nav>
+    <h2 class="mt-0">Adquisiciones Realizadas</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <p>En esta sección podés acceder datos de las adquisiciones realizadas tales como Fecha, Concepto, cantidad, y
+          Montos. A la derecha de la pantalla vas a ver el monto total de las adquisiciones realizadas y además tenés la
+          opción de filtrar los datos y descargar el data set en formato Excel o JSON.</p>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex align-items-center justify-content-center flex-column my-4 resumen-nros">
+          <div class="monto">Gs. {{ total_adquisiciones|floatformat:0|intcomma }}</div>
+          {% if filtered %}
+            <div class="desc mb-4">Total Adquisiciones según filtros</div>
+          {% else %}
+            <div class="desc mb-4">Total Adquisiciones Realizadas</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-8 order-1 order-md-0 mt-2 mb-3 my-md-0">
+        <div class="h-100 d-flex justify-content-center justify-content-md-start align-items-end">
+          <small>Total de items encontrados: {{ view.object_list.count }}</small>
+        </div>
+      </div>
+      <div
+        class="col-md-4 mt-2 mt-md-0 d-flex align-items-md-end justify-content-center justify-content-md-end order-0 order-md-1">
+        <button type="button" data-toggle="collapse" data-target="#filtros" class="btn btn-secondary" id="filtrosBtn">
+          <span class="w-100 d-flex align-items-center justify-content-between">
+            <span>Filtros</span>
+            <i class="icon-chevron-down" id="filtrosArrow"></i>
+          </span>
+        </button>
+      </div>
+    </div> <!-- row -->
+    <div class="collapse" id="filtros">
+      <div class="card card-body">
+        <form>
+          <div class="row">
+            <div class="col-lg-3 col-sm-6 col-12">
+              <div class="form-group">
+                <label class="form-label" for="concepto">Concepto</label>
+                <input type="text" class="form-control form-control-sm" id="concepto" name="concepto"
+                       {% if request.GET.concepto %}value="{{ request.GET.concepto }}"{% endif %}>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12">
+              <div class="form-group" id="fecha">
+                <fieldset>
+                  <legend class="form-label">Fecha</legend>
+                  <input type="text" class="form-control form-control-sm fecha mb-1" name="fecha_desde"
+                         placeholder="Desde" data-provide="datepicker" {% if request.GET.fecha_desde %}
+                         value="{{ request.GET.fecha_desde }}"{% endif %}>
+                  <input type="text" class="form-control form-control-sm fecha mt-1" name="fecha_hasta"
+                         placeholder="Hasta" data-provide="datepicker"
+                         {% if request.GET.fecha_hasta %}value="{{ request.GET.fecha_hasta }}"{% endif %}>
+                </fieldset>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12">
+              <fieldset>
+                <legend class="form-label">Precio Unitario</legend>
+                <input type="text" class="form-control form-control-sm mb-1" name="precio_unitario_desde"
+                       placeholder="Desde"
+                       {% if request.GET.precio_unitario_desde %}value="{{ request.GET.precio_unitario_desde }}"{% endif %}>
+                <input type="text" class="form-control form-control-sm my-1" name="precio_unitario_hasta"
+                       placeholder="Hasta"
+                       {% if request.GET.precio_unitario_hasta %}value="{{ request.GET.precio_unitario_hasta }}"{% endif %}>
+              </fieldset>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12">
+              <fieldset>
+                <legend class="form-label">Precio Total</legend>
+                <input type="text" class="form-control form-control-sm mb-1" name="precio_total_desde"
+                       placeholder="Desde"
+                       {% if request.GET.precio_total_desde %}value="{{ request.GET.precio_total_desde }}"{% endif %}>
+                <input type="text" class="form-control form-control-sm my-1" name="precio_total_hasta"
+                       placeholder="Hasta"
+                       {% if request.GET.precio_total_hasta %}value="{{ request.GET.precio_total_hasta }}"{% endif %}>
+              </fieldset>
+            </div>
+          </div>
+          <div class="w-100 d-flex justify-content-center justify-content-md-end mt-3">
+            <button type="submit" class="btn btn-primary">Aplicar</button>
+          </div>
+        </form>
+      </div>
+    </div> <!-- #filtros -->
+    <div class="table-responsive tabla">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">
+            <div class="d-flex justify-content-between">
+              <span class="mr-1">Fecha</span>
+              <div>
+                {% if orden == 'fecha' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='-fecha' %}">
+                    <i class="icon-sort-asc"></i>
+                  </a>
+                {% elif orden == '-fecha' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='' %}">
+                    <i class="icon-sort-desc"></i>
+                  </a>
+                {% else %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='fecha' %}">
+                    <i class="icon-sort"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </th>
+          <th scope="col">
+            <div class="d-flex justify-content-between">
+              <span class="mr-1">Concepto</span>
+              <div>
+                {% if orden == 'concepto' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='-concepto' %}">
+                    <i class="icon-sort-asc"></i>
+                  </a>
+                {% elif orden == '-concepto' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='' %}">
+                    <i class="icon-sort-desc"></i>
+                  </a>
+                {% else %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='concepto' %}">
+                    <i class="icon-sort"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </th>
+          <th class="text-center" scope="col">Cantidad</th>
+          <th class="text-nowrap" scope="col">
+            <div class="d-flex justify-content-between">
+              <span class="mr-1">Precio Unitario Gs.</span>
+              <div>
+                {% if orden == 'precio_unitario' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='-precio_unitario' %}">
+                    <i class="icon-sort-asc"></i>
+                  </a>
+                {% elif orden == '-precio_unitario' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='' %}">
+                    <i class="icon-sort-desc"></i>
+                  </a>
+                {% else %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='precio_unitario' %}">
+                    <i class="icon-sort"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </th>
+          <th class="text-nowrap" scope="col">
+            <div class="d-flex justify-content-between">
+              <span class="mr-1">Precio Total Gs.</span>
+              <div>
+                {% if orden == 'precio_total' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='-precio_total' %}">
+                    <i class="icon-sort-asc"></i>
+                  </a>
+                {% elif orden == '-precio_total' %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='' %}">
+                    <i class="icon-sort-desc"></i>
+                  </a>
+                {% else %}
+                  <a href="{% url 'core:adquisiciones' %}?{% query_transform request orden='precio_total' %}">
+                    <i class="icon-sort"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </th>
+          <th class="text-center">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.compra.fecha|date:'j/m/Y' }}</td>
+            <td>{{ item.concepto }}</td>
+            <td class="text-center">{{ item.cantidad }}</td>
+            <td class="text-nowrap text-right">{{ item.precio_unitario_pyg|floatformat:0|intcomma }}</td>
+            <td class="text-right text-nowrap">{{ item.precio_total_pyg|floatformat:0|intcomma }}</td>
+            <td class="text-nowrap text-center">
+              <a href="{% url 'core:detalle-adquisiciones' item.compra.id %}">Ver detalle</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div> <!-- table-responsive -->
+    <div class="d-flex align-items-center justify-content-center mt-3 mb-4">
+      {% if is_paginated %}
+        {% include 'core/partials/paginator.html' with ruta='core:adquisiciones' %}
+      {% endif %}
+      <div class="ml-auto">
+        {% include 'core/partials/dropdown.html' with text='Descargar' excel='core:adquisiciones-excel' json='core:adquisiciones-json' %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+  <script src="{% static 'locales/bootstrap-datepicker.es.min.js' %}"></script>
+  <script>
+      $('#fecha').datepicker({
+          inputs: $('.fecha'),
+          disableTouchKeyboard: true,
+          format: 'dd/mm/yyyy',
+          language: 'es',
+          endDate: '{% now 'd/m/Y' %}'
+      });
+  </script>
+  <script>
+      let showFiltros = false;
+      $('#filtrosBtn').click(function (event) {
+          showFiltros = !showFiltros;
+          if (showFiltros) {
+              $('#filtrosArrow').addClass('icon-chevron-up').removeClass('icon-chevron-down');
+          } else {
+              $('#filtrosArrow').addClass('icon-chevron-down').removeClass('icon-chevron-up');
+          }
+      })
+  </script>
+{% endblock %}

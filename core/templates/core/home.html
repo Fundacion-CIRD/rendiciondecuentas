@@ -1,0 +1,164 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block og_title %}Rendición de Donaciones COVID-19{% endblock %}
+{% block og_description %}Sistema de Rendición de Cuentas de Donaciones Recibidas para la lucha contra el COVID-19.{% endblock %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+
+{% block content %}
+  {% include 'core/partials/navbar.html' with display='none' fixed=True %}
+  <div id="banner" class="banner">
+    <div
+      class="container d-flex flex-column pt-4 pt-lg-0 align-items-center justify-content-lg-top justify-content-lg-center">
+      <div class="row">
+        <div class="col-lg-8">
+          <span class="hashtag">#QuedateEnCasa</span>
+          <h1><span>Rendición de <br><strong>DONACIONES FINANCIERAS<br> COVID-19</strong></span></h1>
+          <span class="subtitle">
+            Sistema de Rendición de Cuentas de Donaciones<br>
+            Recibidas por el <a href="https://www.cird.org.py/">CIRD</a>  para la lucha contra el COVID-19.
+          </span>
+          <div class="datos-abiertos d-none d-lg-block">
+            <img class="img-fluid" src="{% static 'img/datos_abiertos_logo.png' %}" alt="Datos Abiertos">
+          </div>
+        </div>
+        <div class="col-lg-4 nav flex-column align-items-lg-end align-items-center justify-content-center mt-4 mt-lg-0">
+          <a class="text-center" href="{% url 'core:antecedentes' %}">Antecedentes</a>
+          <a class="text-center" href="{% url 'core:donaciones' %}">Donaciones Recibidas</a>
+          <a class="text-center" href="{% url 'core:adquisiciones' %}">Adquisiciones Realizadas</a>
+          <a class="text-center" href="#resumenGeneral">Resumen General</a>
+        </div>
+      </div>
+      <div class="datos-abiertos d-lg-none">
+        <img class="img-fluid" src="{% static 'img/datos_abiertos_logo.png' %}" alt="Datos Abiertos">
+      </div>
+    </div>
+  </div> <!-- banner -->
+  <div id="resumenGeneral"></div>
+  <div class="container">
+    <h2>Resumen General</h2>
+    <div class="row resumen-nros">
+      <div class="col-md-6">
+        <div class="monto">Gs. {{ total_donaciones|floatformat:0|intcomma }}</div>
+        <div class="porcentaje">100%</div>
+        <div class="desc mb-4">Total Donaciones Recibidas</div>
+        <div class="d-flex align-items-center justify-content-center">
+          <a href="{% url 'core:donaciones' %}" class="btn btn-primary">Ver Donaciones</a>
+        </div>
+      </div>
+      <div class="col-md-6 mt-4 mt-md-0">
+        <div class="monto">Gs. {{ total_adquisiciones|floatformat:0|intcomma }}</div>
+        <div class="porcentaje">{{ porcentaje_adquisiciones }}%</div>
+        <div class="desc mb-4">Total Adquisiciones Realizadas</div>
+        <div class="d-flex align-items-center justify-content-center">
+          <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver Adquisiciones</a>
+        </div>
+      </div>
+      <div class="col-md-12 mt-5">
+        <div class="monto">Gs. {{ saldo|floatformat:0|intcomma }}</div>
+        <div class="porcentaje">{{ porcentaje_saldo }}%</div>
+        <div class="desc mb-4">Saldo de Donaciones</div>
+      </div>
+    </div> <!-- resumen-nros -->
+    <div class="text-center">
+      Última Actualización: {{ ultima_actualizacion|date:'d/m/Y' }}
+    </div>
+    <hr>
+    <div class="intro">
+      <h2>Rendición de Donaciones COVID-19</h2>
+      <div class="row">
+        <div class="col-lg-6">
+          <p>
+            En el contexto de la emergencia sanitaria declarada por Decreto Nº
+            3456 del 16/03/2020 por el riesgo de expansión del COVID19, el
+            Ministerio de Salud Pública y Bienestar Social (MSPBS) solicitó a la
+            Fundación Centro de Información y Recursos para el Desarrollo (CIRD),
+            establecer un mecanismo para canalizar recursos financieros
+            provenientes de donaciones del sector privado, destinados a fortalecer
+            la respuesta nacional a la emergencia.
+          </p>
+          <p>
+            Esta web es una herramienta de rendición de cuentas de (a) donaciones
+            recibidas y adquisiciones realizadas por el CIRD en el marco del
+            acuerdo con el MSPBS, y (b) donaciones privadas recibidas y
+            adquisiciones realizadas no incluidas en el marco del acuerdo del CIRD
+            con el MSPBS, es decir donaciones recibidas por el CIRD en acuerdo con
+            organizaciones y empresas del sector privado.
+          </p>
+          <p>
+            Aquí podés acceder, filtrar y descargar en formato abierto todos
+            los datos.
+          </p>
+        </div>
+        <div class="col-lg-6">
+          <div class="position-relative todos-por-py">
+            <p class="position-absolute">
+              <a href="https://www.todosporparaguay.org/" target="_blank">Todos por Paraguay</a> es una campaña nacional que tiene el objetivo recaudar fondos para complementar los
+              esfuerzos del Estado en la lucha contra la pandemia COVID-19.
+            </p>
+            <img src="{% static 'img/todos_por_paraguay.png' %}" alt="Campaña Todos por Paraguay"
+                 class="img-fluid position-relative">
+          </div>
+        </div>
+      </div>
+    </div> <!-- intro -->
+    <div class="fundacion-cird mt-4">
+      <div class="row">
+        <div class="col-lg-6 order-1 order-lg-0 mt-3 mt-lg-0">
+          <div class="pr-md-4 pr-0">
+            <img src="{% static 'img/foto cird.jpg' %}" alt="Fundación CIRD" class="img-fluid">
+          </div>
+        </div>
+        <div class="col-lg-6 order-0 order-lg-1">
+          <h3>Fundación CIRD</h3>
+          <p>
+            La <strong>Fundación CIRD</strong>, es una organización privada, sin fines de lucro, con 30 años de
+            experiencia
+            en gerencia de proyectos de desarrollo en el Paraguay. El CIRD está comprometida con el
+            fortalecimiento de las capacidades institucionales de organizaciones y comunidades para la
+            solución de problemas sociales complejos, que afectan a los sectores más pobres y excluidos
+            de la sociedad, buscando generar oportunidades y soluciones, gerenciales y organizacionales,
+            que sean específicas y eficaces para restituir la equidad y capital social en el Paraguay, como
+            herramienta para la incrementación del impacto y la sostenibilidad de los programas de
+            desarrollo, con especial énfasis en los Objetivos de Desarrollo Sostenible.
+          </p>
+          <div class="d-flex align-items-center justify-content-center mt-3 mt-md-4">
+            <a href="https://www.cird.org.py" class="btn btn-primary" target="_blank">Visitar el Sitio Web del CIRD</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {#    <hr>#}
+    {#    <div class="graficos">#}
+    {#      <canvas id="torta" width="400" height="400" style="width: 400px; height: 400px;"></canvas>#}
+    {#      <div class="w-100 d-flex justify-content-center ver-mas">#}
+    {#        <a href="{% url 'core:adquisiciones' %}" class="btn btn-primary">Ver más insumos adquiridos</a>#}
+    {#      </div>#}
+    {#    </div> <!-- graficos -->#}
+    <div class="d-flex align-items-center justify-content-center mt-5 mt-md-4">
+      <a href="{% url 'core:galeria' %}" class="btn btn-primary mt-5">Galería de Imágenes</a>
+    </div>
+  </div><!-- container -->
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+{#  <script>#}
+{#      const data = {{ data| safe }};#}
+{#      const context = document.getElementById('torta').getContext('2d');#}
+{#      const myChart = new Chart(context, {#}
+{#          type: 'pie',#}
+{#          data: {#}
+{#              datasets: [#}
+{#                  {#}
+{#                      data: data,#}
+{#                      backgroundColor: ['#478FBC', '#14679B', '#0C578E', '#0C578E', '#012B4D'],#}
+{#                  }#}
+{#              ],#}
+{#              labels: {{ labels|safe }}#}
+{#          },#}
+{#      });#}
+{#  </script>#}
+{% endblock %}

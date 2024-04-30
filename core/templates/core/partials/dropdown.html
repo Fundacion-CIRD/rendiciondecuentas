@@ -1,0 +1,12 @@
+{% load query_utils %}
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle btn-action" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{ text }}
+    <i class="icon-chevron-down ml-1" id="filtrosArrow"></i>
+  </button>
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="{% url excel %}">Excel</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" target="_blank" href="{% url json %}">JSON</a>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+django = "~=4.2.8"
+django-baton = "*"
+django-postgres-unaccent = {git = "https://github.com/angoybu/django-postgres-unaccent.git",ref = "master"}
+django-active-link = "*"
+djangorestframework = "*"
+pillow = "*"
+gunicorn = "*"
+xlsxwriter = "*"
+django-imagekit = "*"
+django-admin-rangefilter = "*"
+psycopg = "*"

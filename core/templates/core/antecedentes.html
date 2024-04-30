@@ -1,0 +1,97 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+  Antecedentes | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  {% include 'core/partials/navbar.html' %}
+  <div class="container">
+    <p class="mt-5 text-justify">
+      En el contexto de la emergencia declarada por la pandemia del COVID 19, el CIRD ha establecido un mecanismo para canalizar recursos financieros provenientes fundamentalmente del sector privado, destinados a fortalecer la respuesta nacional a la emergencia, esto se da en dos vertientes:
+    </p>
+    <ol type="a">
+      <li>donaciones recibidas y adquisiciones realizadas por el CIRD en el marco del acuerdo con el MSPBS, y</li>
+      <li>donaciones privadas recibidas y adquisiciones realizadas no incluidas en el marco del acuerdo del CIRD con el MSPBS, es decir donaciones recibidas por el CIRD en acuerdo con organizaciones y empresas del sector privado.</li>
+    </ol>
+    <h2>Antecedentes del Acuerdo de Cooperación con el MSPBS</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <p>En el contexto de la emergencia sanitaria declarada por el
+        <a
+          href="https://www.mspbs.gov.py/dependencias/portal/adjunto/aa556a-DECRETO3456DE2020EMERGENCIANACIONAL.pdf"
+          target="_blank">Decreto Nº 3456 del 16 de marzo de 2020</a>
+        por el riesgo de expansión del Coronavirus (COVID 19), el Ministerio de Salud Pública y Bienestar Social (MSPBS) solicitó a la Fundación Centro de Información y Recursos para el Desarrollo (CIRD), el establecimiento de un mecanismo para canalizar recursos financieros provenientes de donaciones del sector privado, destinados a fortalecer la respuesta nacional a la emergencia por la expansión del COVID 19.</p>
+      <p>
+        Al efecto, el 21 de marzo de 2020, el MSPBS y el CIRD determinaron un mecanismo operativo, en el cual el MSPBS es el beneficiario y es quien determina sus prioridades y necesidades, y el CIRD es receptor de los fondos y los aplica según las indicaciones recibidas del MSPBS. También se estableció que el CIRD preparará informes financieros periódicos y disponibilizará la documentación correspondiente para Auditoría.
+      </p>
+      </div>
+      <div class="col-md-6">
+        <p>Para la recepción de los fondos donados, el CIRD dispuso de la cuenta corriente número 800247432 a nombre de
+          la Fundación CIRD del Banco Itaú en la que se depositaran los fondos donados y desde la cual se realizarán los
+          pagos por las adquisiciones que se efectúen, a solicitud de Ministerio de Salud Pública y Bienestar
+          Social.</p>
+        <p>
+          <a href="https://twitter.com/msaludpy/status/1243186202796273664?s=20" target="_blank">
+            <strong>https://twitter.com/
+              <wbr>
+              msaludpy/
+              <wbr>
+              status/
+              <wbr>
+              1243186202796273664?s=20</strong>
+          </a>
+        </p>
+        <p>El CIRD provee sus servicios de manera gratuita, sin cobrar ningún costo administrativo directo ni indirecto
+          sobre las donaciones recibidas, ni por los servicios de gestión de adquisiciones que se realice con los fondos
+          recibidos en donación.</p>
+      </div>
+    </div>
+    <div class="mt-5">
+      <h2>Procedimientos de Adquisición previstos en el Acuerdo de Cooperación con el MSPBS</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <p>MSPBS, donaciones financieras del sector privado vía CIRD para fortalecer respuesta del: <strong>Sistema de
+            salud a la pandemia del COVID 19 (CORONAVIRUS) (21/03/2020).</strong></p>
+
+          <h3>Procedimiento</h3>
+          <p><strong>a. Activación de mecanismo</strong></p>
+          <p>1. <a href="{% static 'ACUERDO_MSPBS_CIRD.pdf' %}" target="_blank">Convenio entre el Ministerio de Salud
+            Pública y Bienestar Social(MSPBS) y el Centro de Información y
+            Recursos para el Desarrollo (CIRD)</a>, para canalizar recursos de donaciones del sector privadodestinados a
+            contribuir y fortalecer la capacidad de respuesta delsistema de salud a la pandemia del COVID 19
+            (Coronavirus), en elcual el MSPBS es el beneficiario y es quien determina sus prioridadesy necesidades
+            recibidas, y el CIRD es receptor de los fondos y losaplica según las indicaciones recibidas del MSPBS.</p>
+          <p><strong>b. Ingresos / Donaciones</strong></p>
+          <p>2. Donante: deposita (o se recibe en efectivo y se deposita) en unacuenta corriente institucional del CIRD
+            de un banco de plaza. CIRD emite recibo por la donación.</p>
+          <ul>
+            <li>Banco: Banco Itaú</li>
+            <li>Nro. de cuenta: 800247432</li>
+            <li>Nombre: Fundación CIRD</li>
+            <li>RUC: 80023167-8</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <p><strong>c. Gastos / Ejecución</strong></p>
+          <p>3. MSPBS y/o Instituciones que el MSPBS indique: remite alCIRD la solicitud de compras de bienes o
+            servicios requeridos (detalledel pedido, cantidad y/o especificaciones técnicas).</p>
+          <p>4. CIRD: recibe la solicitud de compra y procede a la compra del bieno a la contratación del servicio
+            solicitado en modalidad de adquisiciónabreviada.</p>
+          <p>5. MSPBS y/o Instituciones que el MSPBS indique: por medio dela persona designada, recibe los bienes y
+            verifica que cumple con losolicitado.</p>
+          <p>6. CIRD: una vez recibida la aprobación por parte del MSPBS y/oinstitución receptora, procede al pago
+            correspondiente.</p>
+          <p>7. CIRD: archiva la documentación de respaldo, conforme a lo establecido en la legislación vigente.</p>
+          <p><strong>d. Informes financieros</strong></p>
+          <p>8. CIRD: en base a las donaciones recibidas (ingresos) y los pagos delas adquisiciones realizadas prepara
+            informes financieros periódicos ylos remite al MSPBS para informar a los donantes, otras instancias
+            y/ociudadanía en general.</p>
+          <p><strong>e. Auditoría</strong></p>
+          <p>9. CIRD: disponibiliza la documentación y los informes que sean necesarios.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
