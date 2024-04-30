@@ -133,3 +133,8 @@ uploads/
 static_compiled/
 node_modules/
 secrets.json
+
+
+# IDEs
+.idea/
+.vscode/
